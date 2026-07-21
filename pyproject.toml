@@ -1,0 +1,49 @@
+[project]
+name = "geometry-utils"
+description = "Utilities for working with coordinates and rectangles/grids."
+authors = [
+    { name = "Seth 'Violet' Gibbs" },
+]
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/svioletg/py-geometry-utils"
+Repository = "https://github.com/svioletg/py-geometry-utils"
+Documentation = "https://py-geometry-utils.readthedocs.io/en/latest/"
+Changelog = "https://github.com/svioletg/py-geometry-utils/blob/main/CHANGELOG.md"
+Issues = "https://github.com/svioletg/py-geometry-utils/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.15.22",
+    "ty>=0.0.61",
+]
+docs = [
+    "furo>=2025.12.19",
+    "myst-parser>=5.1.0",
+    "sphinx>=6.0,<9.0",
+    "sphinx-autobuild>=2025.8.25",
+]
+
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "geometry/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["geometry"]
