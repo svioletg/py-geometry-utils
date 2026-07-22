@@ -17,6 +17,11 @@ class Coord2:
     y: float
 
     def __init__(self, x: float, y: float) -> None:
+        if not isinstance(x, int | float):
+            raise TypeError(f"{self.__class__.__name__}.__init__() parameter 'x' must be 'int' or 'float': {x!r}")
+        if not isinstance(y, int | float):
+            raise TypeError(f"{self.__class__.__name__}.__init__() parameter 'y' must be 'int' or 'float': {y!r}")
+
         self.x = x
         self.y = y
 
