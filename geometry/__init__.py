@@ -204,7 +204,7 @@ class Coord2:
     def in_bounds(self, rect: RectOrTuple, *, edge_ok: bool = True) -> bool:
         """Returns whether this coordinate is within a rectangle's bounds, not counting the edge.
 
-        :param edge: Whether the coordinate being on the rectangle's edge counts as in bounds or not.
+        :param edge_ok: Whether the coordinate being on the rectangle's edge counts as in bounds or not.
 
         >>> assert Coord2(1, 1).in_bounds((0, 0, 2, 2))
         >>> assert Coord2(0, 0).in_bounds((0, 0, 2, 2))
