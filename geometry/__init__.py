@@ -414,7 +414,7 @@ class Grid2:
     def steps_y(self, *, step: float | None = None, origin: float | None = None) -> Generator[float]:
         """Yields Y coordinates starting at ``origin`` and adding ``step`` while in range of the grid.
 
-        :param step: If ``None``, defaults to ``self.step.x``. If this value is 0, no values are yielded.
+        :param step: If ``None``, defaults to ``self.step.y``. If this value is 0, no values are yielded.
         :param origin: If ``None``, defaults to ``self.origin.y``.
         """
         step = step if step is not None else self.step.y
