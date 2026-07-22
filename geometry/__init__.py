@@ -1,8 +1,9 @@
 """Utilities for working with coordinates and rectangles/grids."""
+import math
 import operator
 from collections.abc import Callable, Generator
 from itertools import product
-from typing import Self, overload
+from typing import Literal, Self, overload
 
 __version__ = '0.1.0'
 
@@ -181,6 +182,20 @@ class Coord2:
             other = (other, other)
 
         return self.__class__(op(self.x, other[0]), op(self.y, other[1]))
+
+    def distance(self, other: CoordOrTuple2, mode: Literal['euclid', 'taxi'] = 'taxi') -> float:
+        """Returns the euclidean or taxicab distance from this coordinate to ``other`` based on ``mode``.
+
+        :param mode: ``'euclid'`` will return the euclidean distance from ``self`` to ``other``, ``'taxi'`` returns the
+            taxicab distance.
+        """
+        match mode:
+            case 'euclid':
+                return math.sqrt(((self[0] - other[0]) ** 2) + ((self[1] - other[1]) ** 2))
+            case 'taxi':
+                return sum((self - other).as_tuple(abs))
+            case _:
+                raise ValueError(f'Unexpected mode: {mode!r}')
 
     def format(self, s: str) -> str:
         """Returns ``s`` formatted with this coordinate's ``x`` and ``y`` values."""

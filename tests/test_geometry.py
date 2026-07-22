@@ -153,6 +153,11 @@ def test_coord2_as_tuple() -> None:
 def test_coord2_binop() -> None:
     assert Coord2(1, 2).binop(max, Coord2(0, 4)) == Coord2(1, 4)
 
+def test_coord2_distance() -> None:
+    a, b = Coord2(1, 2), Coord2(5, 10)
+    assert a.distance(b, 'taxi') == b.distance(a, 'taxi') == 12  # noqa: PLR2004
+    assert round(a.distance(b, 'euclid'), 4) == round(b.distance(a, 'euclid'), 4) == 8.9443  # noqa: PLR2004
+
 def test_coord2_format() -> None:
     assert Coord2(1, 2).format('{x},{y}') == '1,2'
     assert Coord2(1.125, 2.5).format('{x:.2f},{y:.2f}') == '1.12,2.50'
