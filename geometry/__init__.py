@@ -186,14 +186,17 @@ class Coord2:
         """Returns ``s`` formatted with this coordinate's ``x`` and ``y`` values."""
         return s.format(x=self.x, y=self.y)
 
-    def in_bounds(self, rect: RectOrTuple) -> bool:
+    def in_bounds(self, rect: RectOrTuple, *, edge_ok: bool = True) -> bool:
         """Returns whether this coordinate is within a rectangle's bounds, not counting the edge.
+
+        :param edge: Whether the coordinate being on the rectangle's edge counts as in bounds or not.
 
         >>> assert Coord2(1, 1).in_bounds((0, 0, 2, 2))
         >>> assert not Coord2(0, 0).in_bounds((0, 0, 2, 2))
         >>> assert not Coord2(2, 2).in_bounds((0, 0, 2, 2))
         """
-        return (rect[0] < self.x < rect[2]) and (rect[1] < self.y < rect[3])
+        return (rect[0] <= self.x <= rect[2]) and (rect[1] <= self.y <= rect[3]) \
+            if edge_ok else (rect[0] < self.x < rect[2]) and (rect[1] < self.y < rect[3])
 
     def map(self, fn: Callable[[float], float]) -> Self:
         """Returns a new instance of this class with ``fn`` applied to its ``x`` and ``y`` attributes."""
