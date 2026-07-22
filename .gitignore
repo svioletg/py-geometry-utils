@@ -13,4 +13,5 @@ wheels/
 # Cache dirs
 .*cache*/
 
+/_*
 _html/
