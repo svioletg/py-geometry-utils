@@ -5,7 +5,7 @@ from collections.abc import Callable, Generator
 from itertools import product
 from typing import Literal, Self, overload
 
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 type BinaryOp[T, U] = Callable[[T, T], U]
 type CoordOrTuple2 = Coord2 | tuple[float, float]
