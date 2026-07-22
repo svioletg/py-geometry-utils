@@ -316,16 +316,6 @@ class Rect:
 
         return (self.x1, self.y1, self.x2, self.y2)
 
-    def in_bounds(self, coord: CoordOrTuple2) -> bool:
-        """Returns whether ``coord`` is within this rectangle's bounds.
-
-        This is a shortcut to calling ``coord.in_bounds()`` with this rectangle instance.
-        """
-        if isinstance(coord, Coord2):
-            return coord.in_bounds(self)
-
-        return Coord2(*coord).in_bounds(self)
-
     def map(self, fn: Callable[[float], float]) -> Self:
         """Returns a new rectangle with ``fn`` applied to all coordinate values."""
         return self.__class__(fn(self.x1), fn(self.y1), fn(self.x2), fn(self.y2))
