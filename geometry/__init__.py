@@ -474,3 +474,19 @@ class Grid2:
         steps_y = self.steps_y(origin=origin.y, step=step.y)
 
         yield from (Coord2(x, y) for x, y in product(steps_x, steps_y))
+
+    def project(self, coord: CoordOrTuple2, other_grid: 'Grid2') -> Coord2:
+        """Returns a :py:class:`Coord2` as if it were at the same relative position on another grid as this one.
+
+        >>> g1 = Grid2((-100, -100, 100, 100))
+        >>> g2 = Grid2((0, 0, 100, 100))
+        >>> assert g1.project(Coord2(0, 0), g2) == Coord2(50, 50)
+        """
+        coord = coord if isinstance(coord, Coord2) else Coord2(*coord)
+
+        tr_a, br_a = self.rect.corners[0], self.rect.corners[-1]
+        tr_b, br_b = other_grid.rect.corners[0], other_grid.rect.corners[-1]
+
+        offset_factor: Coord2 = (coord - tr_a) / (br_a - tr_a)
+
+        return ((br_b - tr_b) * offset_factor) + tr_b

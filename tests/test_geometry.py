@@ -317,3 +317,9 @@ def test_grid2_steps() -> None:
         Coord2(2, 2),
         Coord2(2, 3),
     ]
+
+def test_grid2_project() -> None:
+    assert Grid2((-100, -100, 100, 100)).project(Coord2(0, 0), Grid2((0, 0, 100, 100))) == Coord2(50, 50)
+    assert Grid2((-100, -100, 100, 100)).project(Coord2(-50, -50), Grid2((0, 0, 100, 100))) == Coord2(25, 25)
+    assert Grid2((-100, -100, 100, 100)).project(Coord2(0, 50), Grid2((0, 0, 100, 100))) == Coord2(50, 75)
+    assert Grid2((-100, -100, 100, 100)).project(Coord2(0, 0), Grid2((0, 0, 100, 200))) == Coord2(50, 100)
