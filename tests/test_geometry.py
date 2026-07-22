@@ -137,7 +137,7 @@ def test_coord2_mag_mod() -> None:
     with pytest.raises(TypeError, match=r"(unsupported operand|must be 'int' or 'float')"):
         Coord2(3.5, 4.25) % '2'  # ty:ignore[unsupported-operator]
 
-def test_coord2_mag_pow() -> None: #[tests: ]
+def test_coord2_mag_pow() -> None:
     assert Coord2(1, 2) ** Coord2(3, 4) == Coord2(1, 16)
     assert Coord2(1, 2) ** (3, 4) == Coord2(1, 16)
     assert Coord2(1, 2) ** 2 == Coord2(1, 4)
