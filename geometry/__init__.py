@@ -253,6 +253,9 @@ class Rect:
 
         return False
 
+    # These are properties since the coordinate attributes could be changed, though I'm reconsidering
+    # whether Rects should be mutable at all
+
     @property
     def area(self) -> float:
         """Total area of this rectangle."""
