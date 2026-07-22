@@ -363,17 +363,30 @@ class Grid2:
 
     rect: Rect
     step: Coord2
+    """Default step used for :py:meth:`steps_x`, :py:meth:`steps_y`, and :py:meth:`steps`."""
     origin: Coord2
+    """Default origin used for :py:meth:`steps_x`, :py:meth:`steps_y`, and :py:meth:`steps`."""
 
     def __init__(self,
             rect: RectOrTuple,
             *,
             step: CoordOrTuple2 = (1, 1),
-            origin: CoordOrTuple2 = (0, 0),
+            origin: CoordOrTuple2 | None = None,
         ) -> None:
+        """Initializes a ``Grid2`` instance.
+
+        :param step: Default step used for :py:meth:`steps_x`, :py:meth:`steps_y`, and :py:meth:`steps`.
+        :param origin: Default origin used for :py:meth:`steps_x`, :py:meth:`steps_y`, and :py:meth:`steps`.
+            If ``None``, the origin is set to the center coordinate of ``rect``.
+            If this coordinate is not within the bounds of ``rect``, ``ValueError`` is raised.
+        """
         self.rect = rect if isinstance(rect, Rect) else Rect(*rect)
         self.step = step if isinstance(step, Coord2) else Coord2(*step)
-        self.origin = origin if isinstance(origin, Coord2) else Coord2(*origin)
+        self.origin = origin if isinstance(origin, Coord2) else Coord2(*self.rect.center if origin is None else origin)
+        if not self.origin.in_bounds(self.rect):
+            raise ValueError(
+                f"{self.__class__.__name__} origin coordinate {origin} is outside the grid's bounds: {self.rect}",
+            )
 
     def __repr__(self) -> str:  # noqa: D105
         return f'{self.__class__.__name__}(rect={self.rect!r}, step={self.step!r}, origin={self.origin!r})'
