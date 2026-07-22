@@ -86,9 +86,9 @@ class Coord2:
 
         If given a single value, it is added to the X and Y values of this coordinate.
 
-        >>> Coord2(1, 2) + Coord2(1, 2) == Coord2(3, 4)
-        >>> Coord2(1, 2) + (1, 2) == Coord2(3, 4)
-        >>> Coord2(1, 2) + 1 == Coord2(3, 3)
+        >>> assert Coord2(1, 2) + Coord2(1, 2) == Coord2(2, 4)
+        >>> assert Coord2(1, 2) + (1, 2) == Coord2(2, 4)
+        >>> assert Coord2(1, 2) + 1 == Coord2(2, 3)
         """
         return self.binop(operator.add, other)
 
@@ -97,9 +97,9 @@ class Coord2:
 
         If given a single value, it is subtracted from the X and Y values of this coordinate.
 
-        >>> Coord2(1, 2) - Coord2(1, 2) == Coord2(0, 0)
-        >>> Coord2(1, 2) - (1, 2) == Coord2(0, 0)
-        >>> Coord2(1, 2) - 1 == Coord2(0, 1)
+        >>> assert Coord2(1, 2) - Coord2(1, 2) == Coord2(0, 0)
+        >>> assert Coord2(1, 2) - (1, 2) == Coord2(0, 0)
+        >>> assert Coord2(1, 2) - 1 == Coord2(0, 1)
         """
         return self.binop(operator.sub, other)
 
@@ -108,9 +108,9 @@ class Coord2:
 
         If given a single value, the X and Y values of this coordinate are multiplied by it.
 
-        >>> Coord2(1, 2) * Coord2(2, 4) == Coord2(2, 8)
-        >>> Coord2(1, 2) * (2, 4) == Coord2(2, 8)
-        >>> Coord2(1, 2) * 2 == Coord2(1, 4)
+        >>> assert Coord2(1, 2) * Coord2(2, 4) == Coord2(2, 8)
+        >>> assert Coord2(1, 2) * (2, 4) == Coord2(2, 8)
+        >>> assert Coord2(1, 2) * 2 == Coord2(2, 4)
         """
         return self.binop(operator.mul, other)
 
@@ -119,9 +119,9 @@ class Coord2:
 
         If given a single value, the X and Y values of this coordinate are divided by it.
 
-        >>> Coord2(1, 2) / Coord2(2, 8) == Coord2(0.5, 0.25)
-        >>> Coord2(1, 2) / (2, 8) == Coord2(0.5, 0.25)
-        >>> Coord2(1, 2) / 2 == Coord2(0.5, 1.0)
+        >>> assert Coord2(1, 2) / Coord2(2, 8) == Coord2(0.5, 0.25)
+        >>> assert Coord2(1, 2) / (2, 8) == Coord2(0.5, 0.25)
+        >>> assert Coord2(1, 2) / 2 == Coord2(0.5, 1.0)
         """
         other = (other, other) if isinstance(other, int | float) else other
 
@@ -132,9 +132,9 @@ class Coord2:
 
         If given a single value, the X and Y values of this coordinate are divided by it and floored.
 
-        >>> Coord2(1, 2) // Coord2(2, 8) == Coord2(0, 0)
-        >>> Coord2(1, 2) // (2, 8) == Coord2(0, 0)
-        >>> Coord2(1, 2) // 2 == Coord2(0, 1)
+        >>> assert Coord2(1, 2) // Coord2(2, 8) == Coord2(0, 0)
+        >>> assert Coord2(1, 2) // (2, 8) == Coord2(0, 0)
+        >>> assert Coord2(1, 2) // 2 == Coord2(0, 1)
         """
         return self.binop(operator.floordiv, other)
 
@@ -143,9 +143,9 @@ class Coord2:
 
         If given a single value, it is added to the X and Y values of this coordinate.
 
-        >>> Coord2(1, 2) % Coord2(2, 8) == Coord2(1, 2)
-        >>> Coord2(1, 2) % (2, 8) == Coord2(1, 2)
-        >>> Coord2(1, 2) % 2 == Coord2(1, 0)
+        >>> assert Coord2(1, 2) % Coord2(2, 8) == Coord2(1, 2)
+        >>> assert Coord2(1, 2) % (2, 8) == Coord2(1, 2)
+        >>> assert Coord2(1, 2) % 2 == Coord2(1, 0)
         """
         return self.binop(operator.mod, other)
 
@@ -154,9 +154,9 @@ class Coord2:
 
         If given a single value, it is added to the X and Y values of this coordinate.
 
-        >>> Coord2(1, 2) ** Coord2(2, 4) == Coord2(1, 16)
-        >>> Coord2(1, 2) ** (2, 4) == Coord2(1, 16)
-        >>> Coord2(1, 2) ** 2 == Coord2(1, 4)
+        >>> assert Coord2(1, 2) ** Coord2(2, 4) == Coord2(1, 16)
+        >>> assert Coord2(1, 2) ** (2, 4) == Coord2(1, 16)
+        >>> assert Coord2(1, 2) ** 2 == Coord2(1, 4)
         """
         return self.binop(operator.pow, other)
 
@@ -192,8 +192,11 @@ class Coord2:
         :param edge: Whether the coordinate being on the rectangle's edge counts as in bounds or not.
 
         >>> assert Coord2(1, 1).in_bounds((0, 0, 2, 2))
-        >>> assert not Coord2(0, 0).in_bounds((0, 0, 2, 2))
-        >>> assert not Coord2(2, 2).in_bounds((0, 0, 2, 2))
+        >>> assert Coord2(0, 0).in_bounds((0, 0, 2, 2))
+        >>> assert not Coord2(0, 0).in_bounds((0, 0, 2, 2), edge_ok=False)
+        >>> assert Coord2(2, 2).in_bounds((0, 0, 2, 2))
+        >>> assert not Coord2(2, 2).in_bounds((0, 0, 2, 2), edge_ok=False)
+        >>> assert not Coord2(3, 3).in_bounds((0, 0, 2, 2))
         """
         return (rect[0] <= self.x <= rect[2]) and (rect[1] <= self.y <= rect[3]) \
             if edge_ok else (rect[0] < self.x < rect[2]) and (rect[1] < self.y < rect[3])
