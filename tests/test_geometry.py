@@ -219,6 +219,12 @@ def test_rect_mag_eq() -> None:
 def test_rect_area() -> None:
     assert Rect(0, 0, 2, 2).area == 4  # noqa: PLR2004
 
+def test_rect_bottom_left() -> None:
+    assert Rect(0, 0, 2, 2).bottom_left == Coord2(0, 2)
+
+def test_rect_bottom_right() -> None:
+    assert Rect(0, 0, 2, 2).bottom_right == Coord2(2, 2)
+
 def test_rect_center() -> None:
     assert Rect(0, 0, 2, 2).center == Coord2(1, 1)
 
@@ -238,6 +244,12 @@ def test_rect_perimeter() -> None:
 
 def test_rect_size() -> None:
     assert Rect(0, 0, 2, 2).size == (2, 2)
+
+def test_rect_top_left() -> None:
+    assert Rect(0, 0, 2, 2).top_left == Coord2(0, 0)
+
+def test_rect_top_right() -> None:
+    assert Rect(0, 0, 2, 2).top_right == Coord2(2, 0)
 
 def test_rect_width() -> None:
     assert Rect(0, 0, 2, 2).height == 2  # noqa: PLR2004

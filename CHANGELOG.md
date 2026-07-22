@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added method `Coord2.distance()`
   - Calculates euclidean or taxicab distance between two coordinates depending on the `mode` parameter
+- Added property `Rect.bottom_left`
+- Added property `Rect.bottom_right`
+- Added property `Rect.top_left`
+- Added property `Rect.top_right`
 
 ### Changed
 

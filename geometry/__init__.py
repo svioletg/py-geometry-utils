@@ -280,6 +280,16 @@ class Rect:
         return self.width * self.height
 
     @property
+    def bottom_left(self) -> Coord2:
+        """Bottom left corner coordinate."""
+        return Coord2(self.x1, self.y2)
+
+    @property
+    def bottom_right(self) -> Coord2:
+        """Bottom right corner coordinate."""
+        return Coord2(self.x2, self.y2)
+
+    @property
     def center(self) -> Coord2:
         """Center coordinate of this rectangle."""
         return Coord2(self.x1 + (self.width / 2), self.y1 + (self.height / 2))
@@ -291,10 +301,10 @@ class Rect:
         The order is top-left, top-right, bottom-left, bottom-right.
         """
         return (
-            Coord2(self.x1, self.y1),
-            Coord2(self.x2, self.y1),
-            Coord2(self.x1, self.y2),
-            Coord2(self.x2, self.y2),
+            self.top_left,
+            self.top_right,
+            self.bottom_left,
+            self.bottom_right,
         )
 
     @property
@@ -311,6 +321,16 @@ class Rect:
     def size(self) -> tuple[float, float]:
         """A tuple of the width and height of this rectangle."""
         return (self.width, self.height)
+
+    @property
+    def top_left(self) -> Coord2:
+        """Top left corner coordinate."""
+        return Coord2(self.x1, self.y1)
+
+    @property
+    def top_right(self) -> Coord2:
+        """Top right corner coordinate."""
+        return Coord2(self.x2, self.y1)
 
     @property
     def width(self) -> float:
