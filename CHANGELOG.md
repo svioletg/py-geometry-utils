@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added method `Coord2.distance()`
   - Calculates euclidean or taxicab distance between two coordinates depending on the `mode` parameter
+- Added method `Grid2.project()`
+  - Returns a coordinate in the same relative position to the `other` grid as it was to `self`
+  - Can be useful for plotting points from a grid with a negative x1 or y1 value onto an image which
+    requires using a grid whose top-left is 0, 0
 - Added property `Rect.bottom_left`
 - Added property `Rect.bottom_right`
 - Added property `Rect.top_left`
