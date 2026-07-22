@@ -320,7 +320,7 @@ class Rect:
     def as_tuple[U](self, map_fn: Callable[[float], U] | None = None) -> tuple[object, object, object, object]:
         """Returns the X1, Y1, X2, and Y2 values as a tuple."""
         if map_fn:
-            return (map_fn(self.x1), map_fn(self.y1), map_fn(self.x2), map_fn(self.y1))
+            return (map_fn(self.x1), map_fn(self.y1), map_fn(self.x2), map_fn(self.y2))
 
         return (self.x1, self.y1, self.x2, self.y2)
 
