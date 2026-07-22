@@ -194,6 +194,11 @@ class Coord2:
         """Returns a new instance of this class with ``fn`` applied to its ``x`` and ``y`` attributes."""
         return self.__class__(fn(self.x), fn(self.y))
 
+    def on_edge(self, rect: RectOrTuple) -> bool:
+        """Returns whether this coordinate sits on the edge of a rectangle."""
+        return ((rect[0] <= self.x <= rect[2]) and (self.y in (rect[1], rect[3]))) \
+            or ((rect[1] <= self.y <= rect[3]) and (self.x in (rect[0], rect[2])))
+
 class Rect:
     """Represents a rectangle using its top-left and bottom-right coordinates."""
 
