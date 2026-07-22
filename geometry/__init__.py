@@ -339,7 +339,12 @@ class Rect:
         if from_center:
             size_x, size_y = size_x / 2, size_y / 2
 
-        return self.__class__(self.x1, self.y1, self.x2 + size_x, self.y2 + size_y)
+        return self.__class__(
+            self.x1 - (size_x if from_center else 0),
+            self.y1 - (size_y if from_center else 0),
+            self.x2 + size_x,
+            self.y2 + size_y,
+        )
 
     def translate_by(self, xy: CoordOrTuple2) -> Self:
         """Returns a new rectangle with this instance's coordinates shifted by ``xy``."""
