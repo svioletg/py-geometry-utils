@@ -2,11 +2,11 @@
 import operator
 from collections.abc import Callable, Generator
 from itertools import product
-from typing import Any, Self, overload
+from typing import Self, overload
 
 __version__ = '0.1.0'
 
-type BinaryOp = Callable[[Any, Any], Any]
+type BinaryOp[T, U] = Callable[[T, T], U]
 type CoordOrTuple2 = Coord2 | tuple[float, float]
 type RectOrTuple = Rect | tuple[float, float, float, float]
 
@@ -166,8 +166,8 @@ class Coord2:
 
         return (self.x, self.y)
 
-    def binop(self, op: BinaryOp, other: Self | tuple[float, float] | float) -> Self:
-        """Calls a binary function using this coordinate's values and another's.
+    def binop(self, op: BinaryOp[float, float], other: Self | tuple[float, float] | float) -> Self:
+        """Calls a binary function using this coordinate's values and another's, returning a new ``Coord2`` instance.
 
         This is equivalent to ``Coord2(op(self.x, other[0]), op(self.y, other[1]))``. If a single number value is given
         for ``other``, it is turned into a two-tuple of itself, i.e. ``(other, other)``.
