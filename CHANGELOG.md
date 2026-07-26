@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `Grid2` is now a subclass of `Rect`
+- `util.snap_num()` parameter `mult` is now typed as `float`
+- `util.snap_num()` return type is now `float`
 
 ### Deprecated
 
