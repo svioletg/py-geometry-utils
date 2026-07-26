@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added parameter `inf` to method `Grid2.steps_x()`
+- Added parameter `inf` to method `Grid2.steps_y()`
 - Added function `util.take_n()`
 
 ### Changed

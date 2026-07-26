@@ -439,11 +439,12 @@ class Grid2(Rect):
     def __str__(self) -> str:  # noqa: D105
         return f'{self.__class__.__name__}({', '.join(map(str, self))})'
 
-    def steps_x(self, *, step: float | None = None, origin: float | None = None) -> Generator[float]:
+    def steps_x(self, *, step: float | None = None, origin: float | None = None, inf: bool = False) -> Generator[float]:
         """Yields X coordinates starting at ``origin`` and adding ``step`` while in range of the grid.
 
         :param step: If ``None``, defaults to ``self.step.x``. If this value is 0, no values are yielded.
         :param origin: If ``None``, defaults to ``self.origin.y``.
+        :param inf: Whether to continue yielding steps infinitely, beyond the grid's defined boundaries.
         """
         step = step if step is not None else self.step.x
         if step == 0:
@@ -452,15 +453,16 @@ class Grid2(Rect):
         origin = origin if origin is not None else self.origin.x
 
         pos = origin
-        while self.x1 <= pos <= self.x2:
+        while inf or (self.x1 <= pos <= self.x2):
             yield pos
             pos += step
 
-    def steps_y(self, *, step: float | None = None, origin: float | None = None) -> Generator[float]:
+    def steps_y(self, *, step: float | None = None, origin: float | None = None, inf: bool = False) -> Generator[float]:
         """Yields Y coordinates starting at ``origin`` and adding ``step`` while in range of the grid.
 
         :param step: If ``None``, defaults to ``self.step.y``. If this value is 0, no values are yielded.
         :param origin: If ``None``, defaults to ``self.origin.y``.
+        :param inf: Whether to continue yielding steps infinitely, beyond the grid's defined boundaries.
         """
         step = step if step is not None else self.step.y
         if step == 0:
@@ -469,7 +471,7 @@ class Grid2(Rect):
         origin = origin if origin is not None else self.origin.y
 
         pos = origin
-        while self.y1 <= pos <= self.y2:
+        while inf or (self.y1 <= pos <= self.y2):
             yield pos
             pos += step
 

@@ -3,6 +3,7 @@ import math
 import pytest
 
 from geometry import Coord2, Grid2, Rect
+from geometry.util import take_n
 from tests import assert_all, assert_attrs
 
 
@@ -308,11 +309,15 @@ def test_grid2_steps_x() -> None:
     assert all(grid.x1 <= x <= grid.x2 for x in steps)
     assert steps == [0, 1, 2]
 
+    assert take_n(grid.steps_x(inf=True), 10) == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
 def test_grid2_steps_y() -> None:
     grid = Grid2(0, 1, 2, 3, origin=(0, 1))
     steps = list(grid.steps_y())
     assert all(grid.y1 <= y <= grid.y2 for y in steps)
     assert steps == [1, 2, 3]
+
+    assert take_n(grid.steps_y(inf=True), 10) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 def test_grid2_steps() -> None:
     grid = Grid2(0, 1, 2, 3, origin=(0, 1))
