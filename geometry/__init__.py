@@ -397,7 +397,7 @@ class Rect:
         """Returns a new rectangle with this instance's coordinates shifted such that its top left coordinate
         equals ``xy``.
         """  # noqa: D205
-        return self.translate_by(Coord2(*xy) - self.corners[0])
+        return self.translate_by(Coord2(*xy) - self.top_left)
 
 class Grid2(Rect):
     """Represents a 2D grid, with methods for iterating over steps."""
@@ -508,8 +508,8 @@ class Grid2(Rect):
         """
         coord = coord if isinstance(coord, Coord2) else Coord2(*coord)
 
-        tr_a, br_a = self.corners[0], self.corners[-1]
-        tr_b, br_b = other_grid.corners[0], other_grid.corners[-1]
+        tr_a, br_a = self.top_right, self.bottom_right
+        tr_b, br_b = other_grid.top_right, other_grid.bottom_right
 
         offset_factor: Coord2 = (coord - tr_a) / (br_a - tr_a)
 
