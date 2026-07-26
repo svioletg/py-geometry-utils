@@ -286,38 +286,38 @@ def test_rect_translate_to() -> None:
     assert Rect(0, 0, 2, 2).translate_to((2, 2)).size == Rect(0, 0, 2, 2).size
 
 def test_grid2_mag_init() -> None:
-    inst = Grid2((-1 ,-1, 1, 1))
-    assert inst.rect == Rect(-1 ,-1, 1, 1)
+    inst = Grid2(-1 ,-1, 1, 1)
+    assert inst.as_tuple() == Rect(-1, -1, 1, 1)
     assert inst.step == Coord2(1, 1)
     assert inst.origin == Coord2(0, 0)
 
-    inst = Grid2((-1 ,-1, 1, 1), step=(1, 2), origin=(1, 1))
+    inst = Grid2(-1 ,-1, 1, 1, step=(1, 2), origin=(1, 1))
     assert inst.step == Coord2(1, 2)
     assert inst.origin == Coord2(1, 1)
 
 def test_grid2_mag_repr() -> None:
-    assert repr(Grid2((-1 ,-1, 1, 1))) == 'Grid2(rect=Rect(x1=-1, y1=-1, x2=1, y2=1),' \
+    assert repr(Grid2(-1 ,-1, 1, 1)) == 'Grid2(x1=-1, y1=-1, x2=1, y2=1,' \
         + ' step=Coord2(x=1, y=1), origin=Coord2(x=0.0, y=0.0))'
 
 def test_grid2_mag_str() -> None:
-    assert str(Grid2((-1 ,-1, 1, 1))) == 'Grid2(-1, -1, 1, 1)'
+    assert str(Grid2(-1 ,-1, 1, 1)) == 'Grid2(-1, -1, 1, 1)'
 
 def test_grid2_steps_x() -> None:
-    grid = Grid2((0, 1, 2, 3), origin=(0, 1))
+    grid = Grid2(0, 1, 2, 3, origin=(0, 1))
     steps = list(grid.steps_x())
-    assert all(grid.rect.x1 <= x <= grid.rect.x2 for x in steps)
+    assert all(grid.x1 <= x <= grid.x2 for x in steps)
     assert steps == [0, 1, 2]
 
 def test_grid2_steps_y() -> None:
-    grid = Grid2((0, 1, 2, 3), origin=(0, 1))
+    grid = Grid2(0, 1, 2, 3, origin=(0, 1))
     steps = list(grid.steps_y())
-    assert all(grid.rect.y1 <= y <= grid.rect.y2 for y in steps)
+    assert all(grid.y1 <= y <= grid.y2 for y in steps)
     assert steps == [1, 2, 3]
 
 def test_grid2_steps() -> None:
-    grid = Grid2((0, 1, 2, 3), origin=(0, 1))
+    grid = Grid2(0, 1, 2, 3, origin=(0, 1))
     steps = list(grid.steps())
-    assert_all(lambda xy: xy.in_bounds(grid.rect), steps)
+    assert_all(lambda xy: xy.in_bounds(grid), steps)
     assert steps == [
         Coord2(0, 1),
         Coord2(0, 2),
@@ -331,7 +331,7 @@ def test_grid2_steps() -> None:
     ]
 
 def test_grid2_project() -> None:
-    assert Grid2((-100, -100, 100, 100)).project(Coord2(0, 0), Grid2((0, 0, 100, 100))) == Coord2(50, 50)
-    assert Grid2((-100, -100, 100, 100)).project(Coord2(-50, -50), Grid2((0, 0, 100, 100))) == Coord2(25, 25)
-    assert Grid2((-100, -100, 100, 100)).project(Coord2(0, 50), Grid2((0, 0, 100, 100))) == Coord2(50, 75)
-    assert Grid2((-100, -100, 100, 100)).project(Coord2(0, 0), Grid2((0, 0, 100, 200))) == Coord2(50, 100)
+    assert Grid2(-100, -100, 100, 100).project(Coord2(0, 0), Grid2(0, 0, 100, 100)) == Coord2(50, 50)
+    assert Grid2(-100, -100, 100, 100).project(Coord2(-50, -50), Grid2(0, 0, 100, 100)) == Coord2(25, 25)
+    assert Grid2(-100, -100, 100, 100).project(Coord2(0, 50), Grid2(0, 0, 100, 100)) == Coord2(50, 75)
+    assert Grid2(-100, -100, 100, 100).project(Coord2(0, 0), Grid2(0, 0, 100, 200)) == Coord2(50, 100)

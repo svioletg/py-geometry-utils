@@ -399,17 +399,19 @@ class Rect:
         """  # noqa: D205
         return self.translate_by(Coord2(*xy) - self.corners[0])
 
-class Grid2:
+class Grid2(Rect):
     """Represents a 2D grid, with methods for iterating over steps."""
 
-    rect: Rect
     step: Coord2
     """Default step used for :py:meth:`steps_x`, :py:meth:`steps_y`, and :py:meth:`steps`."""
     origin: Coord2
     """Default origin used for :py:meth:`steps_x`, :py:meth:`steps_y`, and :py:meth:`steps`."""
 
     def __init__(self,
-            rect: RectOrTuple,
+            x1: float,
+            y1: float,
+            x2: float,
+            y2: float,
             *,
             step: CoordOrTuple2 = (1, 1),
             origin: CoordOrTuple2 | None = None,
@@ -421,19 +423,21 @@ class Grid2:
             If ``None``, the origin is set to the center coordinate of ``rect``.
             If this coordinate is not within the bounds of ``rect``, ``ValueError`` is raised.
         """
-        self.rect = rect if isinstance(rect, Rect) else Rect(*rect)
+        super().__init__(x1, y1, x2, y2)
+
         self.step = step if isinstance(step, Coord2) else Coord2(*step)
-        self.origin = origin if isinstance(origin, Coord2) else Coord2(*self.rect.center if origin is None else origin)
-        if not self.origin.in_bounds(self.rect):
+        self.origin = origin if isinstance(origin, Coord2) else Coord2(*self.center if origin is None else origin)
+        if not self.origin.in_bounds(self):
             raise ValueError(
-                f"{self.__class__.__name__} origin coordinate {origin} is outside the grid's bounds: {self.rect}",
+                f"{self.__class__.__name__} origin coordinate {origin} is outside the grid's bounds: {self}",
             )
 
     def __repr__(self) -> str:  # noqa: D105
-        return f'{self.__class__.__name__}(rect={self.rect!r}, step={self.step!r}, origin={self.origin!r})'
+        return f'{self.__class__.__name__}(x1={self.x1!r}, y1={self.y1!r}, x2={self.x2!r}, y2={self.y2!r},' \
+            + f' step={self.step!r}, origin={self.origin!r})'
 
     def __str__(self) -> str:  # noqa: D105
-        return f'{self.__class__.__name__}({', '.join(map(str, self.rect))})'
+        return f'{self.__class__.__name__}({', '.join(map(str, self))})'
 
     def steps_x(self, *, step: float | None = None, origin: float | None = None) -> Generator[float]:
         """Yields X coordinates starting at ``origin`` and adding ``step`` while in range of the grid.
@@ -448,7 +452,7 @@ class Grid2:
         origin = origin if origin is not None else self.origin.x
 
         pos = origin
-        while self.rect.x1 <= pos <= self.rect.x2:
+        while self.x1 <= pos <= self.x2:
             yield pos
             pos += step
 
@@ -465,7 +469,7 @@ class Grid2:
         origin = origin if origin is not None else self.origin.y
 
         pos = origin
-        while self.rect.y1 <= pos <= self.rect.y2:
+        while self.y1 <= pos <= self.y2:
             yield pos
             pos += step
 
@@ -498,14 +502,14 @@ class Grid2:
     def project(self, coord: CoordOrTuple2, other_grid: 'Grid2') -> Coord2:
         """Returns a :py:class:`Coord2` as if it were at the same relative position on another grid as this one.
 
-        >>> g1 = Grid2((-100, -100, 100, 100))
-        >>> g2 = Grid2((0, 0, 100, 100))
+        >>> g1 = Grid2(-100, -100, 100, 100)
+        >>> g2 = Grid2(0, 0, 100, 100)
         >>> assert g1.project(Coord2(0, 0), g2) == Coord2(50, 50)
         """
         coord = coord if isinstance(coord, Coord2) else Coord2(*coord)
 
-        tr_a, br_a = self.rect.corners[0], self.rect.corners[-1]
-        tr_b, br_b = other_grid.rect.corners[0], other_grid.rect.corners[-1]
+        tr_a, br_a = self.corners[0], self.corners[-1]
+        tr_b, br_b = other_grid.corners[0], other_grid.corners[-1]
 
         offset_factor: Coord2 = (coord - tr_a) / (br_a - tr_a)
 
