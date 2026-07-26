@@ -508,9 +508,9 @@ class Grid2(Rect):
         """
         coord = coord if isinstance(coord, Coord2) else Coord2(*coord)
 
-        tr_a, br_a = self.top_right, self.bottom_right
-        tr_b, br_b = other_grid.top_right, other_grid.bottom_right
+        tl_a, br_a = self.top_left, self.bottom_right
+        tl_b, br_b = other_grid.top_left, other_grid.bottom_right
 
-        offset_factor: Coord2 = (coord - tr_a) / (br_a - tr_a)
+        offset_factor: Coord2 = (coord - tl_a) / (br_a - tl_a)
 
-        return ((br_b - tr_b) * offset_factor) + tr_b
+        return ((br_b - tl_b) * offset_factor) + tl_b
