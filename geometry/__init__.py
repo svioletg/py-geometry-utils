@@ -11,8 +11,11 @@ from geometry.util import snap_num
 __version__ = '0.2.0'
 
 type BinaryOp[T, U] = Callable[[T, T], U]
+"""A function which takes two arguments of the same type and produces another type."""
 type CoordOrTuple2 = Coord2 | tuple[float, float]
+"""A :class:`Coord2` instance or a tuple of two ``float`` types as X and Y coordinates."""
 type RectOrTuple = Rect | tuple[float, float, float, float]
+"""A :class:`Rect` instance or a tuple of four ``float`` types as X1, Y1, X2, and Y2 coordinates."""
 
 class Coord2:
     """Represents a 2D coordinate."""
