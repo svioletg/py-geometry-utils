@@ -2,6 +2,7 @@
 import math
 import operator
 from collections.abc import Callable, Generator
+from copy import copy
 from itertools import product
 from typing import Literal, Self, overload
 
@@ -46,6 +47,10 @@ class Coord2:
     def __hash__(self) -> int:
         """Returns the hash of a tuple of this coordinate's values."""
         return hash(self.as_tuple())
+
+    def __copy__(self) -> Self:
+        """Returns a new instance with the same values as this instance."""
+        return self.__class__(self.x, self.y)
 
     def __eq__(self, value: object) -> bool:
         """Compares the X and Y values of two coordinates, returns ``False`` for other objects."""
@@ -276,6 +281,10 @@ class Rect:
         """Returns the hash of a :py:meth:`as_tuple`."""
         return hash(self.as_tuple())
 
+    def __copy__(self) -> Self:
+        """Returns a new instance with the same values as this instance."""
+        return self.__class__(self.x1, self.y1, self.x2, self.y2)
+
     def __eq__(self, value: object) -> bool:
         """Compares coordinate values if ``value`` is a tuple or ``Rect`` object, otherwise returns ``False``."""
         if isinstance(value, tuple):
@@ -452,6 +461,36 @@ class Grid2(Rect):
 
     def __str__(self) -> str:  # noqa: D105
         return f'{self.__class__.__name__}({', '.join(map(str, self))})'
+
+    def __copy__(self) -> Self:
+        """Returns a new instance with the same values as this instance.
+
+        The resulting copy's ``step`` and ``origin`` are references to this instance's respective objects. Use
+        ``Grid2``'s :meth:`__deepcopy__` implementation to ensure these values are copies as well.
+        """
+        return self.__class__(
+            self.x1,
+            self.y1,
+            self.x2,
+            self.y2,
+            step=self.step,
+            origin=self.origin,
+        )
+
+    def __deepcopy__(self, memo: dict) -> Self:
+        """Returns a new instance with the same values as this instance.
+
+        In contrast to :meth:`__copy__`, a ``Grid2`` deepcopy will also make copies of the ``step`` and ``origin``
+        values.
+        """
+        return self.__class__(
+            self.x1,
+            self.y1,
+            self.x2,
+            self.y2,
+            step=copy(self.step),
+            origin=copy(self.origin),
+        )
 
     def steps_x(self, *, step: float | None = None, origin: float | None = None, inf: bool = False) -> Generator[float]:
         """Yields X coordinates starting at ``origin`` and adding ``step`` while in range of the grid.
