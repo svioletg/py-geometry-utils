@@ -28,6 +28,11 @@ def test_coord2_mag_init() -> None:
     with pytest.raises(TypeError, match='Cannot modify attribute of immutable Coord2 instance'):
         inst.y = 2
 
+def test_coord2_mutable() -> None:
+    assert not Coord2(1, 2).mutable
+    assert not Coord2(1, 2, mut=False).mutable
+    assert Coord2(1, 2, mut=True).mutable
+
 def test_coord2_mag_repr() -> None:
     assert repr(Coord2(1, 2)) == 'Coord2(x=1, y=2)'
 
@@ -274,6 +279,11 @@ def test_rect_mag_init() -> None:
     with pytest.raises(TypeError, match='Cannot modify attribute of immutable Rect instance'):
         inst.y2 = 2
 
+def test_rect_mutable() -> None:
+    assert not Rect(0, 1, 2, 3).mutable
+    assert not Rect(0, 1, 2, 3, mut=False).mutable
+    assert Rect(0, 1, 2, 3, mut=True).mutable
+
 def test_rect_mag_repr() -> None:
     assert repr(Rect(0, 0, 2, 2)) == 'Rect(x1=0, y1=0, x2=2, y2=2)'
 
@@ -405,6 +415,14 @@ def test_grid2_mag_init() -> None:
     assert inst.step is not step
     assert inst.origin is not origin
 
+def test_grid2_mutable() -> None:
+    inst = Grid2(0, 1, 2, 3)
+    assert not inst.mutable
+    assert not inst.step.mutable
+    assert not inst.origin.mutable
+
+    assert Grid2(0, 1, 2, 3, mut=True).mutable
+
 def test_grid2_mag_repr() -> None:
     assert repr(Grid2(-1 ,-1, 1, 1)) == 'Grid2(x1=-1, y1=-1, x2=1, y2=1,' \
         + ' step=Coord2(x=1, y=1), origin=Coord2(x=0.0, y=0.0))'
@@ -419,9 +437,19 @@ def test_grid2_mag_copy() -> None:
     assert copied is not inst
     assert copied == inst
     assert copied.step == inst.step
-    assert copied.step is inst.step
+    assert copied.step is not inst.step
     assert copied.origin == inst.origin
-    assert copied.origin is inst.origin
+    assert copied.origin is not inst.origin
+
+    must_inst = Grid2(0, 1, 2, 3, step=(4, 5), origin=(1, 2), mut=True)
+    copied = copy(must_inst)
+
+    assert copied is not must_inst
+    assert copied == must_inst
+    assert copied.step == must_inst.step
+    assert copied.step is must_inst.step
+    assert copied.origin == must_inst.origin
+    assert copied.origin is must_inst.origin
 
 def test_grid2_mag_deepcopy() -> None:
     inst = Grid2(0, 1, 2, 3, step=(4, 5), origin=(1, 2))
@@ -433,6 +461,16 @@ def test_grid2_mag_deepcopy() -> None:
     assert copied.step is not inst.step
     assert copied.origin == inst.origin
     assert copied.origin is not inst.origin
+
+    must_inst = Grid2(0, 1, 2, 3, step=(4, 5), origin=(1, 2), mut=True)
+    copied = deepcopy(must_inst)
+
+    assert copied is not must_inst
+    assert copied == must_inst
+    assert copied.step == must_inst.step
+    assert copied.step is not must_inst.step
+    assert copied.origin == must_inst.origin
+    assert copied.origin is not must_inst.origin
 
 def test_grid2_steps_x() -> None:
     grid = Grid2(0, 1, 2, 3, origin=(0, 1))
