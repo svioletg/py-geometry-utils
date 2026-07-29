@@ -29,6 +29,7 @@ Issues = "https://github.com/svioletg/py-geometry-utils/issues"
 dev = [
     "pytest>=9.1.1",
     "ruff>=0.15.22",
+    "towncrier>=25.8.0",
     "ty>=0.0.61",
 ]
 docs = [
