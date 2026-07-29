@@ -5,6 +5,8 @@ from collections.abc import Callable, Generator
 from itertools import product
 from typing import Literal, Self, overload
 
+from geometry.util import snap_num
+
 __version__ = '0.2.0'
 
 type BinaryOp[T, U] = Callable[[T, T], U]
@@ -224,6 +226,18 @@ class Coord2:
         """Returns whether this coordinate sits on the edge of a rectangle."""
         return ((rect[0] <= self.x <= rect[2]) and (self.y in (rect[1], rect[3]))) \
             or ((rect[1] <= self.y <= rect[3]) and (self.x in (rect[0], rect[2])))
+
+    def snap_to_grid(self, grid: 'Grid2', snap_fn: Callable[[float], int] = round) -> Self:
+        """Returns a new instance whose X and Y values have been aligned to ``grid``.
+
+        Snapping is done based on ``grid``'s ``step`` and ``origin`` values.
+
+        :param snap_fn: Refer to :func:`~geometry.util.snap_num`.
+        """
+        return self.__class__(
+            snap_num(self.x - grid.origin.x, grid.step.x, snap_fn) + grid.origin.x,
+            snap_num(self.y - grid.origin.y, grid.step.y, snap_fn) + grid.origin.y,
+        )
 
 class Rect:
     """Represents a rectangle using its top-left and bottom-right coordinates."""
