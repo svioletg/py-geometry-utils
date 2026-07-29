@@ -36,7 +36,7 @@ class Coord2:
         self._y = y
 
     @property
-    def x(self) -> float: # testcheck: ignore
+    def x(self) -> float:  # testcheck: ignore
         """X coordinate."""
         return self._x
 
@@ -47,7 +47,7 @@ class Coord2:
         self._x = value
 
     @property
-    def y(self) -> float:
+    def y(self) -> float: # testcheck: ignore
         """Y coordinate."""
         return self._y
 
@@ -301,7 +301,7 @@ class Rect:
         self._y2 = y2
 
     @property
-    def x1(self) -> float:
+    def x1(self) -> float:  # testcheck: ignore
         """Top-left X coordinate."""
         return self._x1
 
@@ -312,7 +312,7 @@ class Rect:
         self._x1 = value
 
     @property
-    def y1(self) -> float:
+    def y1(self) -> float:  # testcheck: ignore
         """Top-left Y coordinate."""
         return self._y1
 
@@ -323,7 +323,7 @@ class Rect:
         self._y1 = value
 
     @property
-    def x2(self) -> float:
+    def x2(self) -> float:  # testcheck: ignore
         """Bottom-right X coordinate."""
         return self._x2
 
@@ -334,7 +334,7 @@ class Rect:
         self._x2 = value
 
     @property
-    def y2(self) -> float:
+    def y2(self) -> float:  # testcheck: ignore
         """Bottom-right Y coordinate."""
         return self._y2
 
@@ -547,7 +547,7 @@ class Grid2(Rect):
             )
 
     @property
-    def step(self) -> Coord2:
+    def step(self) -> Coord2:  # testcheck: ignore
         """Default step used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`."""
         return self._step
 
@@ -558,7 +558,7 @@ class Grid2(Rect):
         self._step = value
 
     @property
-    def origin(self) -> Coord2:
+    def origin(self) -> Coord2:  # testcheck: ignore
         """Default origin used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`."""
         return self._origin
 
