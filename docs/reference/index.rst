@@ -6,4 +6,4 @@
 
 .. automodule:: geometry
    :members:
-   :special-members: __init__
+   :special-members:
