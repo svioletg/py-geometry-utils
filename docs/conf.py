@@ -20,6 +20,8 @@ extensions = [
     'myst_parser',
 ]
 
+autodoc_member_order = 'bysource'
+
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
