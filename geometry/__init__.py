@@ -237,7 +237,7 @@ class Coord2:
 
         Snapping is done based on ``grid``'s ``step`` and ``origin`` values.
 
-        :param snap_fn: Refer to :func:`~geometry.util.snap_num`.
+        :param snap_fn: Refer to :func:`geometry.util.snap_num`.
         """
         return self.__class__(
             snap_num(self.x - grid.origin.x, grid.step.x, snap_fn) + grid.origin.x,
