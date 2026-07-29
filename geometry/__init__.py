@@ -32,6 +32,10 @@ class Coord2:
     def __repr__(self) -> str:  # noqa: D105
         return f'{self.__class__.__name__}(x={self.x}, y={self.y})'
 
+    def __str__(self) -> str:
+        """Returns this coordinate in the format ``(x, y)``."""
+        return f'({self.x}, {self.y})'
+
     def __bool__(self) -> bool:
         """Returns ``False`` if both X and Y values equal 0, otherwise returns ``True``."""
         return not (self.x == self.y == 0)

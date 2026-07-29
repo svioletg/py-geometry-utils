@@ -17,6 +17,9 @@ def test_coord2_mag_init() -> None:
 def test_coord2_mag_repr() -> None:
     assert repr(Coord2(1, 2)) == 'Coord2(x=1, y=2)'
 
+def test_coord2_mag_str() -> None:
+    assert str(Coord2(1, 2)) == '(1, 2)'
+
 def test_coord2_mag_bool() -> None:
     assert Coord2(0, 1)
     assert Coord2(1, 0)
