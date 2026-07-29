@@ -456,6 +456,9 @@ class Grid2(Rect):
     def steps_x(self, *, step: float | None = None, origin: float | None = None, inf: bool = False) -> Generator[float]:
         """Yields X coordinates starting at ``origin`` and adding ``step`` while in range of the grid.
 
+        .. note::
+            Yields no items if the step value is 0.
+
         :param step: If ``None``, defaults to ``self.step.x``. If this value is 0, no values are yielded.
         :param origin: If ``None``, defaults to ``self.origin.y``.
         :param inf: Whether to continue yielding steps infinitely, beyond the grid's defined boundaries.
@@ -473,6 +476,9 @@ class Grid2(Rect):
 
     def steps_y(self, *, step: float | None = None, origin: float | None = None, inf: bool = False) -> Generator[float]:
         """Yields Y coordinates starting at ``origin`` and adding ``step`` while in range of the grid.
+
+        .. note::
+            Yields no items if the step value is 0.
 
         :param step: If ``None``, defaults to ``self.step.y``. If this value is 0, no values are yielded.
         :param origin: If ``None``, defaults to ``self.origin.y``.
@@ -497,6 +503,9 @@ class Grid2(Rect):
         """Yields coordinates from the product of :py:meth:`steps_x` and :py:meth:`steps_y`.
 
         Coordinates are yielded going vertically first, e.g. ``(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), ...``.
+
+        .. note::
+            Yields no items if either step value is 0.
 
         :param step: If ``None``, defaults to ``self.step``. If this value is equal to ``(0, 0)``, no values are
             yielded.
