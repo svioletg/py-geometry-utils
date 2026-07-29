@@ -239,13 +239,17 @@ class Coord2:
     def snap_to_grid(self, grid: 'Grid2', snap_fn: Callable[[float], int] = round) -> Self:
         """Returns a new instance whose X and Y values have been aligned to ``grid``.
 
-        Snapping is done based on ``grid``'s ``step`` and ``origin`` values.
+        Snapping is done based on ``grid``'s ``step`` and ``origin`` values. If either value of ``grid.step`` is 0,
+        that part of the coordinate is set to the corresponding value of the grid's origin, e.g. if ``grid.step.x`` is
+        0, ``grid.origin.x`` is used for the ``x`` value of the returned instance.
 
         :param snap_fn: Refer to :func:`geometry.util.snap_num`.
         """
         return self.__class__(
-            snap_num(self.x - grid.origin.x, grid.step.x, snap_fn) + grid.origin.x,
-            snap_num(self.y - grid.origin.y, grid.step.y, snap_fn) + grid.origin.y,
+            grid.origin.x if not grid.step.x \
+                else snap_num(self.x - grid.origin.x, grid.step.x, snap_fn) + grid.origin.x,
+            grid.origin.y if not grid.step.y \
+                else snap_num(self.y - grid.origin.y, grid.step.y, snap_fn) + grid.origin.y,
         )
 
 class Rect:
