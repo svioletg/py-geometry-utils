@@ -1,4 +1,5 @@
 import math
+from copy import copy, deepcopy
 
 import pytest
 
@@ -146,6 +147,13 @@ def test_coord2_mag_pow() -> None:
     with pytest.raises(TypeError, match=r"(unsupported operand|must be 'int' or 'float')"):
         Coord2(1, 2) ** '2'  # ty:ignore[unsupported-operator]
 
+def test_coord2_mag_copy() -> None:
+    inst = Coord2(1, 2)
+    copied = copy(inst)
+
+    assert copied is not inst
+    assert copied == inst
+
 def test_coord2_as_tuple() -> None:
     assert Coord2(1.0, 2.0).as_tuple() == (1.0, 2.0)
     assert Coord2(1.0, 2.0).as_tuple(int) == (1, 2)
@@ -237,6 +245,13 @@ def test_rect_mag_hash() -> None:
 def test_rect_mag_eq() -> None:
     assert Rect(0, 0, 2, 2) == Rect(0, 0, 2, 2) == (0, 0, 2, 2)
 
+def test_rect_mag_copy() -> None:
+    inst = Rect(0, 1, 2, 3)
+    copied = copy(inst)
+
+    assert copied is not inst
+    assert copied == inst
+
 def test_rect_area() -> None:
     assert Rect(0, 0, 2, 2).area == 4  # noqa: PLR2004
 
@@ -322,6 +337,28 @@ def test_grid2_mag_repr() -> None:
 
 def test_grid2_mag_str() -> None:
     assert str(Grid2(-1 ,-1, 1, 1)) == 'Grid2(-1, -1, 1, 1)'
+
+def test_grid2_mag_copy() -> None:
+    inst = Grid2(0, 1, 2, 3, step=(4, 5), origin=(1, 2))
+    copied = copy(inst)
+
+    assert copied is not inst
+    assert copied == inst
+    assert copied.step == inst.step
+    assert copied.step is inst.step
+    assert copied.origin == inst.origin
+    assert copied.origin is inst.origin
+
+def test_grid2_mag_deepcopy() -> None:
+    inst = Grid2(0, 1, 2, 3, step=(4, 5), origin=(1, 2))
+    copied = deepcopy(inst)
+
+    assert copied is not inst
+    assert copied == inst
+    assert copied.step == inst.step
+    assert copied.step is not inst.step
+    assert copied.origin == inst.origin
+    assert copied.origin is not inst.origin
 
 def test_grid2_steps_x() -> None:
     grid = Grid2(0, 1, 2, 3, origin=(0, 1))
