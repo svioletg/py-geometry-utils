@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 from collections.abc import Iterable, Iterator
 from itertools import chain
 from pathlib import Path
-from typing import Literal, cast
+from typing import Literal
 
 PATH_EXCLUDE: tuple[Path, ...] = (
     Path('.venv'),
@@ -63,7 +63,7 @@ def has_decorators(func: ast.FunctionDef, names: str | Iterable[str], *, mode: L
         case _:
             raise ValueError(f'Unexpected value for mode: {mode!r}')
 
-    return method(cast('ast.Name', deco).id in names for deco in func.decorator_list)
+    return method(deco.id in names for deco in func.decorator_list if isinstance(deco, ast.Name))
 
 def make_test_name(func: str, *, cls: str = '') -> str:
     magic = bool(DUNDER_REGEX.match(func))
@@ -135,9 +135,9 @@ def main() -> int:  # noqa: C901
         new_tests[test_path] = []
         for cls, fns in kv.items():
             for fn in fns:
-                if any(cast('ast.Name', deco).id == 'overload' for deco in fn.decorator_list):
-                    # If the body is just ... it's probably an overload
+                if has_decorators(fn, 'overload'):
                     continue
+
                 test_name = make_test_name(fn.name, cls=cls)
                 if test_name not in tests_found[test_path]:
                     print(f'{fp}:{fn.lineno}: no test for {cls or '<mod>'}.{fn.name}'
