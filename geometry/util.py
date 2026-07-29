@@ -9,8 +9,8 @@ def ident[T](value: T) -> T:
 def snap_num(num: float, mult: float, snap_fn: Callable[[float], int] = round) -> float:
     """Snaps ``num`` to the smallest or largest (depending on the outcome of ``snap_fn``) multiple of ``mult``.
 
-    :param snap_fn: The function to apply to the result of ``num / mult`` which should produce an integer.
-        This defaults to the :func:`round` builtin.
+    :param snap_fn: A function which rounds a number to an integer, determining if ``num`` snaps to the closest or
+        farthest multiple.
 
         >>> import math
         >>> assert snap_num(4, 5, math.floor) == 0
