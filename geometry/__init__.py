@@ -553,7 +553,7 @@ class Grid2(Rect):
         Coordinates are yielded going vertically first, e.g. ``(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), ...``.
 
         .. note::
-            Yields no items if either step value is 0.
+            Yields no items if both values of ``step`` are 0.
 
         :param step: If ``None``, defaults to ``self.step``. If this value is equal to ``(0, 0)``, no values are
             yielded.
@@ -567,8 +567,8 @@ class Grid2(Rect):
         origin = origin if origin is not None else self.origin
         origin = origin if isinstance(origin, Coord2) else Coord2(*origin)
 
-        steps_x = self.steps_x(origin=origin.x, step=step.x)
-        steps_y = self.steps_y(origin=origin.y, step=step.y)
+        steps_x = self.steps_x(origin=origin.x, step=step.x) if step.x else (0,)
+        steps_y = self.steps_y(origin=origin.y, step=step.y) if step.y else (0,)
 
         yield from (Coord2(x, y) for x, y in product(steps_x, steps_y))
 
