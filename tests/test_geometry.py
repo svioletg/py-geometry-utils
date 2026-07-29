@@ -339,7 +339,7 @@ def test_grid2_mag_repr() -> None:
         + ' step=Coord2(x=1, y=1), origin=Coord2(x=0.0, y=0.0))'
 
 def test_grid2_mag_str() -> None:
-    assert str(Grid2(-1 ,-1, 1, 1)) == 'Grid2(-1, -1, 1, 1)'
+    assert str(Grid2(-1 ,-1, 1, 1, step=(2, 2), origin=(-1, -1))) == '(-1, -1, 1, 1)[step=(2, 2), origin=(-1, -1)]'
 
 def test_grid2_mag_copy() -> None:
     inst = Grid2(0, 1, 2, 3, step=(4, 5), origin=(1, 2))

@@ -463,8 +463,9 @@ class Grid2(Rect):
         return f'{self.__class__.__name__}(x1={self.x1!r}, y1={self.y1!r}, x2={self.x2!r}, y2={self.y2!r},' \
             + f' step={self.step!r}, origin={self.origin!r})'
 
-    def __str__(self) -> str:  # noqa: D105
-        return f'{self.__class__.__name__}({', '.join(map(str, self))})'
+    def __str__(self) -> str:
+        """Returns this grid in the format ``(x1, y1, x2, y2)[step=str(step), origin=str(origin)]``."""
+        return f'{self.as_tuple()}[step={self.step}, origin={self.origin}]'
 
     def __copy__(self) -> Self:
         """Returns a new instance with the same values as this instance.
