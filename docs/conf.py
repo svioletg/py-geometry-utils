@@ -21,6 +21,9 @@ extensions = [
 ]
 
 autodoc_member_order = 'bysource'
+autodoc_default_options = {
+    'exclude-members': '__weakref__',
+}
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
