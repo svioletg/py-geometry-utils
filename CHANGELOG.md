@@ -12,10 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added parameter `inf` to method `Grid2.steps_x()`
 - Added parameter `inf` to method `Grid2.steps_y()`
 - Added method `Coord2.snap_to_grid()`
-- Implemented `__copy__` for `Coord2`
-- Implemented `__copy__` for `Rect`
-- Implemented `__copy__` for `Grid2`
-- Implemented `__deepcopy__` for `Grid2`
+- Implemented `__copy__` for `Coord2` (#1)
+- Implemented `__copy__` for `Rect` (#1)
+- Implemented `__copy__` for `Grid2` (#1)
+- Implemented `__deepcopy__` for `Grid2` (#1)
 - Added function `util.take_n()`
 
 ### Changed
