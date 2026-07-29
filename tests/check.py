@@ -30,8 +30,14 @@ class FunctionFinder(ast.NodeVisitor):  # noqa: D101
         super().__init__()
 
     @classmethod
-    def from_file(cls, fp: str | Path) -> dict[str, list[ast.FunctionDef]]:  # noqa: D102
-        tree = ast.parse(Path(fp).read_text('utf-8'))
+    def from_file(cls, fp: str | Path) -> dict[str, list[ast.FunctionDef]]:
+        """Returns a dictionary of function names to ``ast.FunctionDef`` found in the contents of ``fp``."""
+        return cls.from_str(Path(fp).read_text('utf-8'))
+
+    @classmethod
+    def from_str(cls, s: str) -> dict[str, list[ast.FunctionDef]]:
+        """Returns a dictionary of function names to ``ast.FunctionDef`` found in ``s``."""
+        tree = ast.parse(s)
         inst = cls()
         inst.visit(tree)
 
