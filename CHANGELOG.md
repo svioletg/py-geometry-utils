@@ -32,7 +32,7 @@ This project uses [towncrier](https://towncrier.readthedocs.io) to generate rele
 - `util.snap_num()` return type is now `float`
 - `util.snap_num()` parameter `snap_fn` is now optional (defaults to the built-in `round` function)
 
-## [0.2.0]
+## [0.2.0] - 2026-07-22
 
 ### Added
 
@@ -47,6 +47,6 @@ This project uses [towncrier](https://towncrier.readthedocs.io) to generate rele
 - Added property `Rect.top_left`
 - Added property `Rect.top_right`
 
-## [0.1.0]
+## [0.1.0] - 2026-07-21
 
 Initial beta release.
