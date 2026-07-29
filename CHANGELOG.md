@@ -19,6 +19,7 @@ This project uses [towncrier](https://towncrier.readthedocs.io) to generate rele
 - Implemented `__copy__` for `Rect` (#1)
 - Implemented `__copy__` for `Grid2` (#1)
 - Implemented `__deepcopy__` for `Grid2` (#1)
+- Added function `util.partition()`
 - Added function `util.take_n()`
 
 ### Changed
