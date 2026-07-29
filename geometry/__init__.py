@@ -434,7 +434,10 @@ class Rect:
         return self.translate_by(Coord2(*xy) - self.top_left)
 
 class Grid2(Rect):
-    """Represents a 2D grid, with methods for iterating over steps."""
+    """Represents a 2D grid, with methods for iterating over its steps.
+
+    Subclass of :class:`Rect`.
+    """
 
     step: Coord2
     """Default step used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`."""
