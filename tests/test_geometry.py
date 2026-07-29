@@ -190,6 +190,26 @@ def test_coord2_on_edge() -> None:
     assert Coord2(1, 2).on_edge((0, 0, 2, 2))
     assert Coord2(2, 2).on_edge((0, 0, 2, 2))
 
+def test_coord2_snap_to_grid() -> None:
+    g = Grid2(-100, -100, 100, 100, step=(10, 10))
+    assert Coord2(25, 25).snap_to_grid(g) == Coord2(20, 20)
+    assert Coord2(25, 25).snap_to_grid(g, math.ceil) == Coord2(30, 30)
+    assert Coord2(25, 25).snap_to_grid(g, math.floor) == Coord2(20, 20)
+
+    assert Coord2(-25, -25).snap_to_grid(g) == Coord2(-20, -20)
+    assert Coord2(-25, -25).snap_to_grid(g, math.ceil) == Coord2(-20, -20)
+    assert Coord2(-25, -25).snap_to_grid(g, math.floor) == Coord2(-30, -30)
+
+    # Make sure snapping takes the origin into account
+    g = Grid2(-108, -103, 89, 92, step=(10, 10), origin=(5, 5))
+    assert Coord2(23, 23).snap_to_grid(g) == Coord2(25, 25)
+    assert Coord2(23, 23).snap_to_grid(g, math.ceil) == Coord2(25, 25)
+    assert Coord2(23, 23).snap_to_grid(g, math.floor) == Coord2(15, 15)
+
+    assert Coord2(-23, -23).snap_to_grid(g) == Coord2(-25, -25)
+    assert Coord2(-23, -23).snap_to_grid(g, math.ceil) == Coord2(-15, -15)
+    assert Coord2(-23, -23).snap_to_grid(g, math.floor) == Coord2(-25, -25)
+
 def test_rect_mag_init() -> None:
     rect_attrs = {'x1': 1, 'y1': 2, 'x2': 3, 'y2': 4}
 
