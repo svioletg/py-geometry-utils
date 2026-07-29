@@ -274,15 +274,15 @@ class Rect:
         return str(self.as_tuple())
 
     def __iter__(self) -> Generator[float]:
-        """Returns a generator yielding from :py:meth:`as_tuple`."""
+        """Returns a generator yielding from :meth:`as_tuple`."""
         yield from self.as_tuple()
 
     def __getitem__(self, idx: int) -> float:
-        """Returns the item at ``idx`` from :py:meth:`as_tuple`."""
+        """Returns the item at ``idx`` from :meth:`as_tuple`."""
         return self.as_tuple()[idx]
 
     def __hash__(self) -> int:
-        """Returns the hash of a :py:meth:`as_tuple`."""
+        """Returns the hash of a :meth:`as_tuple`."""
         return hash(self.as_tuple())
 
     def __copy__(self) -> Self:
@@ -430,9 +430,9 @@ class Grid2(Rect):
     """Represents a 2D grid, with methods for iterating over steps."""
 
     step: Coord2
-    """Default step used for :py:meth:`steps_x`, :py:meth:`steps_y`, and :py:meth:`steps`."""
+    """Default step used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`."""
     origin: Coord2
-    """Default origin used for :py:meth:`steps_x`, :py:meth:`steps_y`, and :py:meth:`steps`."""
+    """Default origin used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`."""
 
     def __init__(self,
             x1: float,
@@ -445,8 +445,8 @@ class Grid2(Rect):
         ) -> None:
         """Initializes a ``Grid2`` instance.
 
-        :param step: Default step used for :py:meth:`steps_x`, :py:meth:`steps_y`, and :py:meth:`steps`.
-        :param origin: Default origin used for :py:meth:`steps_x`, :py:meth:`steps_y`, and :py:meth:`steps`.
+        :param step: Default step used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`.
+        :param origin: Default origin used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`.
             If ``None``, the origin is set to the center coordinate of ``rect``.
             If this coordinate is not within the bounds of ``rect``, ``ValueError`` is raised.
         """
@@ -544,7 +544,7 @@ class Grid2(Rect):
             step: CoordOrTuple2 | None = None,
             origin: CoordOrTuple2 | None = None,
         ) -> Generator[Coord2]:
-        """Yields coordinates from the product of :py:meth:`steps_x` and :py:meth:`steps_y`.
+        """Yields coordinates from the product of :meth:`steps_x` and :meth:`steps_y`.
 
         Coordinates are yielded going vertically first, e.g. ``(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), ...``.
 
@@ -569,7 +569,7 @@ class Grid2(Rect):
         yield from (Coord2(x, y) for x, y in product(steps_x, steps_y))
 
     def project(self, coord: CoordOrTuple2, other_grid: 'Grid2') -> Coord2:
-        """Returns a :py:class:`Coord2` as if it were at the same relative position on another grid as this one.
+        """Returns a :class:`Coord2` as if it were at the same relative position on another grid as this one.
 
         >>> g1 = Grid2(-100, -100, 100, 100)
         >>> g2 = Grid2(0, 0, 100, 100)
