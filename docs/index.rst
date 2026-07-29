@@ -8,6 +8,7 @@ geometry documentation
    readme.rst
    changelog.rst
    reference/index.rst
+   reference/util.rst
 
 Indices and tables
 ==================
