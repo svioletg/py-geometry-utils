@@ -8,7 +8,7 @@ from typing import Literal, Self, overload, override
 
 from geometry.util import snap_num
 
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 type BinaryOp[T, U] = Callable[[T, T], U]
 """A function which takes two arguments of the same type and produces another type."""
