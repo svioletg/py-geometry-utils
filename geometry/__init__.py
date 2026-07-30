@@ -137,7 +137,7 @@ class Coord2:
         >>> assert Coord2(1, 2) + (1, 2) == Coord2(2, 4)
         >>> assert Coord2(1, 2) + 1 == Coord2(2, 3)
         """
-        return self.binop(operator.add, other)
+        return self.zip_with(operator.add, other)
 
     def __sub__(self, other: Self | tuple[float, float] | float) -> Self:
         """Returns a new coordinate with this and another coordinate's X and Y values subtracted from eachother.
@@ -148,7 +148,7 @@ class Coord2:
         >>> assert Coord2(1, 2) - (1, 2) == Coord2(0, 0)
         >>> assert Coord2(1, 2) - 1 == Coord2(0, 1)
         """
-        return self.binop(operator.sub, other)
+        return self.zip_with(operator.sub, other)
 
     def __mul__(self, other: Self | tuple[float, float] | float) -> Self:
         """Returns a new coordinate with this and another coordinate's X and Y multiplied together.
@@ -159,7 +159,7 @@ class Coord2:
         >>> assert Coord2(1, 2) * (2, 4) == Coord2(2, 8)
         >>> assert Coord2(1, 2) * 2 == Coord2(2, 4)
         """
-        return self.binop(operator.mul, other)
+        return self.zip_with(operator.mul, other)
 
     def __truediv__(self, other: Self | tuple[float, float] | float) -> Self:
         """Returns a new coordinate with this and another coordinate's X and Y divided by eachother.
@@ -172,7 +172,7 @@ class Coord2:
         """
         other = (other, other) if isinstance(other, int | float) else other
 
-        return self.binop(operator.truediv, other)
+        return self.zip_with(operator.truediv, other)
 
     def __floordiv__(self, other: Self | tuple[float, float] | float) -> Self:
         """Returns a new coordinate with this and another coordinate's X and Y values divided by eachother and floored.
@@ -183,7 +183,7 @@ class Coord2:
         >>> assert Coord2(1, 2) // (2, 8) == Coord2(0, 0)
         >>> assert Coord2(1, 2) // 2 == Coord2(0, 1)
         """
-        return self.binop(operator.floordiv, other)
+        return self.zip_with(operator.floordiv, other)
 
     def __mod__(self, other: Self | tuple[float, float] | float) -> Self:
         """Returns a new coordinate with this and another coordinate's X and Y values added together.
@@ -194,7 +194,7 @@ class Coord2:
         >>> assert Coord2(1, 2) % (2, 8) == Coord2(1, 2)
         >>> assert Coord2(1, 2) % 2 == Coord2(1, 0)
         """
-        return self.binop(operator.mod, other)
+        return self.zip_with(operator.mod, other)
 
     def __pow__(self, other: Self | tuple[float, float] | float) -> Self:
         """Returns a new coordinate with this and another coordinate's X and Y values added together.
@@ -205,7 +205,7 @@ class Coord2:
         >>> assert Coord2(1, 2) ** (2, 4) == Coord2(1, 16)
         >>> assert Coord2(1, 2) ** 2 == Coord2(1, 4)
         """
-        return self.binop(operator.pow, other)
+        return self.zip_with(operator.pow, other)
 
     @overload
     def as_tuple(self, map_fn: None = None) -> tuple[float, float]: ...
@@ -217,17 +217,6 @@ class Coord2:
             return (map_fn(self.x), map_fn(self.y))
 
         return (self.x, self.y)
-
-    def binop(self, op: Callable[[float, float], float], other: Self | tuple[float, float] | float) -> Self:
-        """Calls a binary function using this coordinate's values and another's, returning a new ``Coord2`` instance.
-
-        This is equivalent to ``Coord2(op(self.x, other[0]), op(self.y, other[1]))``. If a single number value is given
-        for ``other``, it is turned into a two-tuple of itself, i.e. ``(other, other)``.
-        """
-        if not isinstance(other, Coord2 | tuple):
-            other = (other, other)
-
-        return self.__class__(op(self.x, other[0]), op(self.y, other[1]))
 
     def distance(self, other: CoordOrTuple2, mode: Literal['euclid', 'taxi'] = 'taxi') -> float:
         """Returns the euclidean or taxicab distance from this coordinate to ``other`` based on ``mode``.
@@ -286,6 +275,17 @@ class Coord2:
             grid.origin.y if not grid.step.y \
                 else snap_num(self.y - grid.origin.y, grid.step.y, snap_fn) + grid.origin.y,
         )
+
+    def zip_with(self, fn: Callable[[float, float], float], other: Self | tuple[float, float] | float) -> Self:
+        """Combines this and another instance or tuple's values using ``fn``.
+
+        The values used are those returned by iterating over the instance—for :class:`Coord2`, that would be ``x`` and
+        ``y``. If a single number is given for ``other``, it is used for both values.
+        """
+        if not isinstance(other, Coord2 | tuple):
+            other = (other, other)
+
+        return self.__class__(*(fn(a, b) for a, b in zip(self, other, strict=True)))
 
 class Rect:
     """Represents a rectangle using its top-left and bottom-right coordinates.

@@ -1,4 +1,5 @@
 import math
+import operator
 from copy import copy, deepcopy
 
 import pytest
@@ -181,9 +182,6 @@ def test_coord2_as_tuple() -> None:
     assert Coord2(1.0, 2.0).as_tuple(int) == (1, 2)
     assert Coord2(1.0, 2.0).as_tuple(str) == ('1.0', '2.0')
 
-def test_coord2_binop() -> None:
-    assert Coord2(1, 2).binop(max, Coord2(0, 4)) == Coord2(1, 4)
-
 def test_coord2_distance() -> None:
     a, b = Coord2(1, 2), Coord2(5, 10)
     assert a.distance(b, 'taxi') == b.distance(a, 'taxi') == 12  # noqa: PLR2004
@@ -251,6 +249,11 @@ def test_coord2_snap_to_grid() -> None:
     assert Coord2(4, 6).snap_to_grid(Grid2(-100, -100, 100, 100, step=(0, 10))) == Coord2(0, 10)
     assert Coord2(6, 6).snap_to_grid(Grid2(-100, -100, 100, 100, step=(0, 10))) == Coord2(0, 10)
     assert Coord2(6, 4).snap_to_grid(Grid2(-100, -100, 100, 100, step=(0, 10))) == Coord2(0, 0)
+
+def test_coord2_zip_with() -> None:
+    assert Coord2(1, 2).zip_with(max, Coord2(0, 4)) == Coord2(1, 4)
+    assert Coord2(1, 2).zip_with(max, (0, 4)) == Coord2(1, 4)
+    assert Coord2(1, 2).zip_with(operator.add, 10) == Coord2(11, 12)
 
 def test_rect_mag_init() -> None:
     rect_attrs = {'x1': 1, 'y1': 2, 'x2': 3, 'y2': 4}
