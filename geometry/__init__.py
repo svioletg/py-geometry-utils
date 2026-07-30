@@ -515,6 +515,20 @@ class Rect:
         """  # noqa: D205
         return self.translate_by(Coord2(*xy) - self.top_left)
 
+    def zip_with(self,
+            fn: Callable[[float, float], float],
+            other: Self | tuple[float, float, float, float] | float,
+        ) -> Self:
+        """Combines this and another instance or tuple's values using ``fn``.
+
+        The values used are those returned by iterating over the instance—for :class:`Rect`, that would be :data:`x1`,
+        :data:`y1`, :data:`x2`, and :data:`y2`.
+        """
+        if not isinstance(other, Rect | tuple):
+            other = (other, other, other, other)
+
+        return self.__class__(*(fn(a, b) for a, b in zip(self, other, strict=True)))
+
 class Grid2(Rect):
     """Represents a 2D grid, with methods for iterating over its steps.
 

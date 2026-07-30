@@ -385,6 +385,11 @@ def test_rect_translate_to() -> None:
     assert Rect(0, 0, 2, 2).translate_to((1, 2)) == Rect(1, 2, 3, 4)
     assert Rect(0, 0, 2, 2).translate_to((2, 2)).size == Rect(0, 0, 2, 2).size
 
+def test_rect_zip_with() -> None:
+    assert Rect(0, 0, 2, 2).zip_with(max, Rect(-2, -2, 4, 4)) == Rect(0, 0, 4, 4)
+    assert Rect(0, 0, 2, 2).zip_with(max, (-2, -2, 4, 4)) == Rect(0, 0, 4, 4)
+    assert Rect(0, 0, 2, 2).zip_with(operator.add, 10) == Rect(10, 10, 12, 12)
+
 def test_grid2_mag_init() -> None:
     inst = Grid2(-1 ,-1, 1, 1)
     assert inst.as_tuple() == Rect(-1, -1, 1, 1)
