@@ -9,6 +9,33 @@ This project uses [towncrier](https://towncrier.readthedocs.io) to generate rele
 
 <!-- towncrier release notes start -->
 
+## [0.4.0] - 2026-07-30
+
+### Added
+
+- Added property `Coord2.mutable` (#6)
+- Added property `Rect.mutable` (#6)
+- Added property `Grid2.mutable` (#6)
+- Added optional parameter `mut` to `Coord2.__init__()` (#6)
+- Added optional parameter `mut` to `Rect.__init__()` (#6)
+- Added optional parameter `mut` to `Grid2.__init__()` (#6)
+- Added override method `Grid2.from_size()`
+  - Allows setting the `step` and `origin` of the resulting instance
+- Added function `util.partition()` (#6)
+
+### Changed
+
+- `Coord2`, `Rect`, and `Grid2` are now "immutable" by default, and must be
+  initialized with `mut=True` to modify their attributes
+- `Coord2` attributes `x` and `y` are now properties
+  - Values can only be set if `Coord2` was initialized with `mut=True` (#6)
+- `Rect` attributes `x1`, `y1`, `x2`, and `y2` are now properties
+  - Values can only be set if `Rect` was initialized with `mut=True` (#6)
+- `Grid2` attributes `step` and `origin` are now properties
+  - Values can only be set if `Grid2` was initialized with `mut=True` (#6)
+- `Grid2.step` and `Grid2.origin` are now properties, value is automatically
+  coerced to `Coord2` when setting
+
 ## [0.3.0]
 
 ### Added
