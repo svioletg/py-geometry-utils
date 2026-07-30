@@ -1,0 +1,1 @@
+Added property `Rect.mutable`

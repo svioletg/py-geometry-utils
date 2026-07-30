@@ -1,5 +1,5 @@
 """General utilities for ``geometry``."""
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 
 
 def ident[T](value: T) -> T:
@@ -17,6 +17,19 @@ def snap_num(num: float, mult: float, snap_fn: Callable[[float], int] = round) -
         >>> assert snap_num(1, 5, math.ceil) == 5
     """
     return mult * (snap_fn(num / mult))
+
+def partition[T](it: Iterable[T], predicate: Callable[[T], bool]) -> tuple[list[T], list[T]]:
+    """Separates ``it`` into two lists based on whether ``predicate(i)`` is true for each given item.
+
+    The left list is items that satisfy the predicate, the right list is items that fail the predicate.
+    """
+    yes = []
+    no = []
+
+    for i in it:
+        (yes if predicate(i) else no).append(i)
+
+    return yes, no
 
 def take_n[T](it: Iterator[T], n: int, *, strict: bool = False) -> list[T]:
     """Returns ``n`` items yielded from ``it``.

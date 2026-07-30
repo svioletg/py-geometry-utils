@@ -18,19 +18,53 @@ type RectOrTuple = Rect | tuple[float, float, float, float]
 """A :class:`Rect` instance or a tuple of four ``float`` types as X1, Y1, X2, and Y2 coordinates."""
 
 class Coord2:
-    """Represents a 2D coordinate."""
+    """Represents a 2D coordinate.
 
-    x: float
-    y: float
+    Properties :data:`x` and :data:`y` are immutable by default; initialize the instance with ``mut=True`` to allow
+    setting their values.
+    """
 
-    def __init__(self, x: float, y: float) -> None:
+    def __init__(self, x: float, y: float, *, mut: bool = False) -> None:
+        """
+        :param mut: Whether this instance's attributes can be modified or not. If ``False``, ``TypeError`` is raised
+            when attempting to reassign them.
+        """  # noqa: D205, D212
         if not isinstance(x, int | float):
             raise TypeError(f"{self.__class__.__name__}.__init__() parameter 'x' must be 'int' or 'float': {x!r}")
         if not isinstance(y, int | float):
             raise TypeError(f"{self.__class__.__name__}.__init__() parameter 'y' must be 'int' or 'float': {y!r}")
 
-        self.x = x
-        self.y = y
+        self._mut = mut
+
+        self._x = x
+        self._y = y
+
+    @property
+    def x(self) -> float:  # testcheck: ignore
+        """X coordinate."""
+        return self._x
+
+    @x.setter
+    def x(self, value: float) -> None:
+        if not self._mut:
+            raise TypeError(f'Cannot modify attribute of immutable {self.__class__.__name__} instance')
+        self._x = value
+
+    @property
+    def y(self) -> float: # testcheck: ignore
+        """Y coordinate."""
+        return self._y
+
+    @y.setter
+    def y(self, value: float) -> None:
+        if not self._mut:
+            raise TypeError(f'Cannot modify attribute of immutable {self.__class__.__name__} instance')
+        self._y = value
+
+    @property
+    def mutable(self) -> bool:
+        """Whether this instance's attributes can be modified."""
+        return self._mut
 
     def __repr__(self) -> str:  # noqa: D105
         return f'{self.__class__.__name__}(x={self.x}, y={self.y})'
@@ -57,7 +91,7 @@ class Coord2:
 
     def __copy__(self) -> Self:
         """Returns a new instance with the same values as this instance."""
-        return self.__class__(self.x, self.y)
+        return self.__class__(self.x, self.y, mut=self.mutable)
 
     def __eq__(self, value: object) -> bool:
         """Compares the X and Y values of two coordinates, returns ``False`` for other objects."""
@@ -256,22 +290,72 @@ class Coord2:
         )
 
 class Rect:
-    """Represents a rectangle using its top-left and bottom-right coordinates."""
+    """Represents a rectangle using its top-left and bottom-right coordinates.
 
-    x1: float
-    """Top-left X coordinate."""
-    y1: float
-    """Top-left Y coordinate."""
-    x2: float
-    """Bottom-right X coordinate."""
-    y2: float
-    """Bottom-right Y coordinate."""
+    Properties :data:`x1`, :data:`y1`, :data:`x2`, and :data:`y2` are immutable by default; initialize the instance with
+    ``mut=True`` to allow setting their values.
+    """
 
-    def __init__(self, x1: float, y1: float, x2: float, y2: float) -> None:
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
+    def __init__(self, x1: float, y1: float, x2: float, y2: float, *, mut: bool = False) -> None:
+        """
+        :param mut: Whether this instance's attributes can be modified or not. If ``False``, ``TypeError`` is raised
+            when attempting to reassign them.
+        """  # noqa: D205, D212
+        self._mut = mut
+
+        self._x1 = x1
+        self._y1 = y1
+        self._x2 = x2
+        self._y2 = y2
+
+    @property
+    def x1(self) -> float:  # testcheck: ignore
+        """Top-left X coordinate."""
+        return self._x1
+
+    @x1.setter
+    def x1(self, value: float) -> None:
+        if not self._mut:
+            raise TypeError(f'Cannot modify attribute of immutable {self.__class__.__name__} instance')
+        self._x1 = value
+
+    @property
+    def y1(self) -> float:  # testcheck: ignore
+        """Top-left Y coordinate."""
+        return self._y1
+
+    @y1.setter
+    def y1(self, value: float) -> None:
+        if not self._mut:
+            raise TypeError(f'Cannot modify attribute of immutable {self.__class__.__name__} instance')
+        self._y1 = value
+
+    @property
+    def x2(self) -> float:  # testcheck: ignore
+        """Bottom-right X coordinate."""
+        return self._x2
+
+    @x2.setter
+    def x2(self, value: float) -> None:
+        if not self._mut:
+            raise TypeError(f'Cannot modify attribute of immutable {self.__class__.__name__} instance')
+        self._x2 = value
+
+    @property
+    def y2(self) -> float:  # testcheck: ignore
+        """Bottom-right Y coordinate."""
+        return self._y2
+
+    @y2.setter
+    def y2(self, value: float) -> None:
+        if not self._mut:
+            raise TypeError(f'Cannot modify attribute of immutable {self.__class__.__name__} instance')
+        self._y2 = value
+
+    @property
+    def mutable(self) -> bool:
+        """Whether this instance's attributes can be modified."""
+        return self._mut
 
     def __repr__(self) -> str:  # noqa: D105
         return f'{self.__class__.__name__}(x1={self.x1!r}, y1={self.y1!r}, x2={self.x2!r}, y2={self.y2!r})'
@@ -294,7 +378,7 @@ class Rect:
 
     def __copy__(self) -> Self:
         """Returns a new instance with the same values as this instance."""
-        return self.__class__(self.x1, self.y1, self.x2, self.y2)
+        return self.__class__(self.x1, self.y1, self.x2, self.y2, mut=self.mutable)
 
     def __eq__(self, value: object) -> bool:
         """Compares coordinate values if ``value`` is a tuple or ``Rect`` object, otherwise returns ``False``."""
@@ -437,6 +521,10 @@ class Grid2(Rect):
     """Represents a 2D grid, with methods for iterating over its steps.
 
     Subclass of :class:`Rect`.
+
+    Properties :data:`step` and :data:`origin` are immutable by default; initialize the instance with ``mut=True`` to
+    allow setting their values. When initialized as immutable, if :class:`Coord2` objects are given for the ``step`` and
+    ``origin`` parameters of :meth:`__init__`, they will be copied as immutable.
     """
 
     def __init__(self,
@@ -447,6 +535,7 @@ class Grid2(Rect):
             *,
             step: CoordOrTuple2 = (1, 1),
             origin: CoordOrTuple2 | None = None,
+            mut: bool = False,
         ) -> None:
         """Initializes a ``Grid2`` instance.
 
@@ -454,11 +543,15 @@ class Grid2(Rect):
         :param origin: Default origin used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`.
             If ``None``, the origin is set to the center coordinate of ``rect``.
             If this coordinate is not within the bounds of ``rect``, ``ValueError`` is raised.
+        :param mut: Whether this instance's attributes can be modified or not. If ``False``, ``TypeError`` is raised
+            when attempting to reassign them, and ``step`` and ``origin`` will be made immutable as well.
         """
-        super().__init__(x1, y1, x2, y2)
+        super().__init__(x1, y1, x2, y2, mut=mut)
 
-        self._step = step if isinstance(step, Coord2) else Coord2(*step)
-        self._origin = origin if isinstance(origin, Coord2) else Coord2(*self.center if origin is None else origin)
+        self._step = step if isinstance(step, Coord2) and mut \
+            else Coord2(*step, mut=mut)
+        self._origin = origin if isinstance(origin, Coord2) and mut \
+            else Coord2(*self.center if origin is None else origin, mut=mut)
 
         if not self._origin.in_bounds(self):
             raise ValueError(
@@ -472,6 +565,8 @@ class Grid2(Rect):
 
     @step.setter
     def step(self, value: CoordOrTuple2) -> None:
+        if not self._mut:
+            raise TypeError(f'Cannot modify attribute of immutable {self.__class__.__name__} instance')
         self._step = value if isinstance(value, Coord2) else Coord2(*value)
 
     @property
@@ -481,7 +576,14 @@ class Grid2(Rect):
 
     @origin.setter
     def origin(self, value: CoordOrTuple2) -> None:
+        if not self._mut:
+            raise TypeError(f'Cannot modify attribute of immutable {self.__class__.__name__} instance')
         self._origin = value if isinstance(value, Coord2) else Coord2(*value)
+
+    @property
+    def mutable(self) -> bool:
+        """Whether this instance's attributes can be modified."""
+        return self._mut
 
     def __repr__(self) -> str:  # noqa: D105
         return f'{self.__class__.__name__}(x1={self.x1!r}, y1={self.y1!r}, x2={self.x2!r}, y2={self.y2!r},' \
@@ -504,6 +606,7 @@ class Grid2(Rect):
             self.y2,
             step=self.step,
             origin=self.origin,
+            mut=self.mutable,
         )
 
     def __deepcopy__(self, memo: dict) -> Self:
@@ -519,6 +622,7 @@ class Grid2(Rect):
             self.y2,
             step=copy(self.step),
             origin=copy(self.origin),
+            mut=self.mutable,
         )
 
     @classmethod
