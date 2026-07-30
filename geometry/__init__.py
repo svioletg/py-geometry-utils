@@ -439,11 +439,6 @@ class Grid2(Rect):
     Subclass of :class:`Rect`.
     """
 
-    step: Coord2
-    """Default step used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`."""
-    origin: Coord2
-    """Default origin used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`."""
-
     def __init__(self,
             x1: float,
             y1: float,
@@ -462,12 +457,31 @@ class Grid2(Rect):
         """
         super().__init__(x1, y1, x2, y2)
 
-        self.step = step if isinstance(step, Coord2) else Coord2(*step)
-        self.origin = origin if isinstance(origin, Coord2) else Coord2(*self.center if origin is None else origin)
-        if not self.origin.in_bounds(self):
+        self._step = step if isinstance(step, Coord2) else Coord2(*step)
+        self._origin = origin if isinstance(origin, Coord2) else Coord2(*self.center if origin is None else origin)
+
+        if not self._origin.in_bounds(self):
             raise ValueError(
                 f"{self.__class__.__name__} origin coordinate {origin} is outside the grid's bounds: {self}",
             )
+
+    @property
+    def step(self) -> Coord2:
+        """Default step used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`."""
+        return self._step
+
+    @step.setter
+    def step(self, value: CoordOrTuple2) -> None:
+        self._step = value if isinstance(value, Coord2) else Coord2(*value)
+
+    @property
+    def origin(self) -> Coord2:
+        """Default origin used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`."""
+        return self._origin
+
+    @origin.setter
+    def origin(self, value: CoordOrTuple2) -> None:
+        self._origin = value if isinstance(value, Coord2) else Coord2(*value)
 
     def __repr__(self) -> str:  # noqa: D105
         return f'{self.__class__.__name__}(x1={self.x1!r}, y1={self.y1!r}, x2={self.x2!r}, y2={self.y2!r},' \

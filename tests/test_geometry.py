@@ -375,6 +375,24 @@ def test_grid2_mag_deepcopy() -> None:
     assert copied.origin == inst.origin
     assert copied.origin is not inst.origin
 
+def test_grid2_step() -> None:
+    grid = Grid2(0, 0, 10, 10, step=(1, 1))
+    assert isinstance(grid.step, Coord2)
+    assert grid.step == Coord2(1, 1)
+
+    grid.step = (2, 2)
+    assert isinstance(grid.step, Coord2)
+    assert grid.step == Coord2(2, 2)
+
+def test_grid2_origin() -> None:
+    grid = Grid2(0, 0, 10, 10, origin=(1, 1))
+    assert isinstance(grid.origin, Coord2)
+    assert grid.origin == Coord2(1, 1)
+
+    grid.origin = (2, 2)
+    assert isinstance(grid.origin, Coord2)
+    assert grid.origin == Coord2(2, 2)
+
 def test_grid2_steps_x() -> None:
     grid = Grid2(0, 1, 2, 3, origin=(0, 1))
     steps = list(grid.steps_x())
