@@ -10,8 +10,6 @@ from geometry.util import snap_num
 
 __version__ = '0.4.0'
 
-type BinaryOp[T, U] = Callable[[T, T], U]
-"""A function which takes two arguments of the same type and produces another type."""
 type CoordOrTuple2 = Coord2 | tuple[float, float]
 """A :class:`Coord2` instance or a tuple of two ``float`` types as X and Y coordinates."""
 type RectOrTuple = Rect | tuple[float, float, float, float]
@@ -220,7 +218,7 @@ class Coord2:
 
         return (self.x, self.y)
 
-    def binop(self, op: BinaryOp[float, float], other: Self | tuple[float, float] | float) -> Self:
+    def binop(self, op: Callable[[float, float], float], other: Self | tuple[float, float] | float) -> Self:
         """Calls a binary function using this coordinate's values and another's, returning a new ``Coord2`` instance.
 
         This is equivalent to ``Coord2(op(self.x, other[0]), op(self.y, other[1]))``. If a single number value is given
