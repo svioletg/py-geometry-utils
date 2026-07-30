@@ -18,7 +18,11 @@ type RectOrTuple = Rect | tuple[float, float, float, float]
 """A :class:`Rect` instance or a tuple of four ``float`` types as X1, Y1, X2, and Y2 coordinates."""
 
 class Coord2:
-    """Represents a 2D coordinate."""
+    """Represents a 2D coordinate.
+
+    Properties :data:`x` and :data:`y` are immutable by default; initialize the instance with ``mut=True`` to allow
+    setting their values.
+    """
 
     def __init__(self, x: float, y: float, *, mut: bool = False) -> None:
         """
@@ -286,7 +290,11 @@ class Coord2:
         )
 
 class Rect:
-    """Represents a rectangle using its top-left and bottom-right coordinates."""
+    """Represents a rectangle using its top-left and bottom-right coordinates.
+
+    Properties :data:`x1`, :data:`y1`, :data:`x2`, and :data:`y2` are immutable by default; initialize the instance with
+    ``mut=True`` to allow setting their values.
+    """
 
     def __init__(self, x1: float, y1: float, x2: float, y2: float, *, mut: bool = False) -> None:
         """
@@ -513,6 +521,10 @@ class Grid2(Rect):
     """Represents a 2D grid, with methods for iterating over its steps.
 
     Subclass of :class:`Rect`.
+
+    Properties :data:`step` and :data:`origin` are immutable by default; initialize the instance with ``mut=True`` to
+    allow setting their values. When initialized as immutable, if :class:`Coord2` objects are given for the ``step`` and
+    ``origin`` parameters of :meth:`__init__`, they will be copied as immutable.
     """
 
     def __init__(self,
