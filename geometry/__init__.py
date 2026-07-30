@@ -4,7 +4,7 @@ import operator
 from collections.abc import Callable, Generator
 from copy import copy
 from itertools import product
-from typing import Literal, Self, overload
+from typing import Literal, Self, overload, override
 
 from geometry.util import snap_num
 
@@ -559,26 +559,26 @@ class Grid2(Rect):
             )
 
     @property
-    def step(self) -> Coord2:  # testcheck: ignore
+    def step(self) -> Coord2:
         """Default step used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`."""
         return self._step
 
     @step.setter
-    def step(self, value: Coord2) -> None:
+    def step(self, value: CoordOrTuple2) -> None:
         if not self._mut:
             raise TypeError(f'Cannot modify attribute of immutable {self.__class__.__name__} instance')
-        self._step = value
+        self._step = value if isinstance(value, Coord2) else Coord2(*value)
 
     @property
-    def origin(self) -> Coord2:  # testcheck: ignore
+    def origin(self) -> Coord2:
         """Default origin used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`."""
         return self._origin
 
     @origin.setter
-    def origin(self, value: Coord2) -> None:
+    def origin(self, value: CoordOrTuple2) -> None:
         if not self._mut:
             raise TypeError(f'Cannot modify attribute of immutable {self.__class__.__name__} instance')
-        self._origin = value
+        self._origin = value if isinstance(value, Coord2) else Coord2(*value)
 
     @property
     def mutable(self) -> bool:
@@ -623,6 +623,34 @@ class Grid2(Rect):
             step=copy(self.step),
             origin=copy(self.origin),
             mut=self.mutable,
+        )
+
+    @classmethod
+    @override
+    def from_size(cls,
+            size: CoordOrTuple2,
+            center: CoordOrTuple2 | None = None,
+            *,
+            step: CoordOrTuple2 | None = None,
+            origin: CoordOrTuple2 | None = None,
+        ) -> Self:
+        """Returns a new grid of the given size.
+
+        Created with its top left coordinate at ``0, 0`` by default unless ``center`` is specified, where it will be
+        sized out from that coordinate as the origin of the rectangle. Note that this is separate from ``origin``, which
+        has nothing to do with the grid's physical bounds and is be used to set the ``origin`` attribute of the grid
+        instance.
+        """
+        rad_x, rad_y = size[0] / 2, size[1] / 2
+        center_x, center_y = center if center is not None else (rad_x, rad_y)
+
+        return cls(
+            center_x - rad_x,
+            center_y - rad_y,
+            center_x + rad_x,
+            center_y + rad_y,
+            step=step if step is not None else (1, 1),
+            origin=origin,
         )
 
     def steps_x(self, *, step: float | None = None, origin: float | None = None, inf: bool = False) -> Generator[float]:
