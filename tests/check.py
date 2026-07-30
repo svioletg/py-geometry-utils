@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 from collections.abc import Iterable, Iterator
 from itertools import chain
 from pathlib import Path
-from typing import Literal
+from typing import Literal, TypedDict
 
 PATH_EXCLUDE: tuple[Path, ...] = (
     Path('.venv'),
@@ -16,6 +16,12 @@ PATH_EXCLUDE: tuple[Path, ...] = (
 )
 
 DUNDER_REGEX: re.Pattern = re.compile(r'^__(\w+)__$')
+
+FUNC_IGNORE_REGEX: re.Pattern = re.compile(r'# testcheck: ignore\b')
+
+class FileContentDict(TypedDict):  # noqa: D101
+    raw: str
+    lines: list[str]
 
 class FunctionFinder(ast.NodeVisitor):  # noqa: D101
     current_class: ast.ClassDef | None = None
@@ -57,7 +63,23 @@ class FunctionFinder(ast.NodeVisitor):  # noqa: D101
         else:
             self.functions[''].append(node)
 
+def _assemble_deco_name(node: ast.expr) -> str:
+    def _dive(node: ast.expr) -> str:
+        if isinstance(node, ast.Name):
+            return node.id
+        if isinstance(node, ast.Attribute):
+            return f'{_assemble_deco_name(node.value)}.{node.attr}'
+
+        # ast.expr covers lots of types but this library doesn't use anything but Name and Attribute decorators
+        raise TypeError(f'Unsupported type for _assemble_deco_name: {node!r}')
+
+    return _dive(node)
+
 def has_decorators(func: ast.FunctionDef, names: str | Iterable[str], *, mode: Literal['any', 'all'] = 'any') -> bool:
+    """Checks whether ``func`` has any decorators matching a name in ``names`` applied to it.
+
+    Attribute
+    """
     if isinstance(names, str):
         names = (names,)
 
@@ -69,7 +91,11 @@ def has_decorators(func: ast.FunctionDef, names: str | Iterable[str], *, mode: L
         case _:
             raise ValueError(f'Unexpected value for mode: {mode!r}')
 
-    return method(deco.id in names for deco in func.decorator_list if isinstance(deco, ast.Name))
+    return method(
+        _assemble_deco_name(deco) in names
+        for deco in func.decorator_list
+        if isinstance(deco, ast.Attribute | ast.Name)
+    )
 
 def make_test_name(func: str, *, cls: str = '') -> str:
     magic = bool(DUNDER_REGEX.match(func))
@@ -121,6 +147,7 @@ def main() -> int:  # noqa: C901
     )
 
     functions: dict[Path, dict[str, list[ast.FunctionDef]]] = {}
+    file_content: dict[Path, FileContentDict] = {}
 
     for fp in target_files:
         if any(fp.is_relative_to(exclude) for exclude in PATH_EXCLUDE):
@@ -128,7 +155,11 @@ def main() -> int:  # noqa: C901
         if fp.suffix != '.py':
             continue
 
-        functions[fp] = FunctionFinder.from_file(fp)
+        file_content[fp] = {
+            'raw': (content := fp.read_text('utf-8')),
+            'lines': content.splitlines(),
+        }
+        functions[fp] = FunctionFinder.from_str(content)
 
     tests_found: dict[Path, list[str]] = {
         fp:[fn.name for fn in FunctionFinder.from_file(fp)['']]
@@ -141,7 +172,11 @@ def main() -> int:  # noqa: C901
         new_tests[test_path] = []
         for cls, fns in kv.items():
             for fn in fns:
-                if has_decorators(fn, 'overload'):
+                pre_def_line, def_line = file_content[fp]['lines'][fn.lineno - 2:fn.lineno]
+
+                if FUNC_IGNORE_REGEX.search(def_line) or FUNC_IGNORE_REGEX.search(pre_def_line):
+                    continue
+                if has_decorators(fn, ('overload', f'{fn.name}.setter')):
                     continue
 
                 test_name = make_test_name(fn.name, cls=cls)
