@@ -4,7 +4,7 @@ import operator
 from collections.abc import Callable, Generator
 from copy import copy
 from itertools import product
-from typing import Literal, Self, overload
+from typing import Literal, Self, overload, override
 
 from geometry.util import snap_num
 
@@ -519,6 +519,34 @@ class Grid2(Rect):
             self.y2,
             step=copy(self.step),
             origin=copy(self.origin),
+        )
+
+    @classmethod
+    @override
+    def from_size(cls,
+            size: CoordOrTuple2,
+            center: CoordOrTuple2 | None = None,
+            *,
+            step: CoordOrTuple2 | None = None,
+            origin: CoordOrTuple2 | None = None,
+        ) -> Self:
+        """Returns a new grid of the given size.
+
+        Created with its top left coordinate at ``0, 0`` by default unless ``center`` is specified, where it will be
+        sized out from that coordinate as the origin of the rectangle. Note that this is separate from ``origin``, which
+        has nothing to do with the grid's physical bounds and is be used to set the ``origin`` attribute of the grid
+        instance.
+        """
+        rad_x, rad_y = size[0] / 2, size[1] / 2
+        center_x, center_y = center if center is not None else (rad_x, rad_y)
+
+        return cls(
+            center_x - rad_x,
+            center_y - rad_y,
+            center_x + rad_x,
+            center_y + rad_y,
+            step=step if step is not None else (1, 1),
+            origin=origin,
         )
 
     def steps_x(self, *, step: float | None = None, origin: float | None = None, inf: bool = False) -> Generator[float]:
