@@ -1,0 +1,1 @@
+Added property `Grid2.mutable`
