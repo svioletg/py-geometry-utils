@@ -569,3 +569,32 @@ def test_grid2_project() -> None:
     assert Grid2(-100, -100, 100, 100).project(Coord2(-50, -50), Grid2(0, 0, 100, 100)) == Coord2(25, 25)
     assert Grid2(-100, -100, 100, 100).project(Coord2(0, 50), Grid2(0, 0, 100, 100)) == Coord2(50, 75)
     assert Grid2(-100, -100, 100, 100).project(Coord2(0, 0), Grid2(0, 0, 100, 200)) == Coord2(50, 100)
+
+def test_grid2_zip_with() -> None:
+    assert Grid2(0, 0, 2, 2).zip_with(max, Grid2(-2, -2, 4, 4)) == Grid2(0, 0, 4, 4)
+    assert Grid2(0, 0, 2, 2).zip_with(max, (-2, -2, 4, 4)) == Grid2(0, 0, 4, 4)
+    assert Grid2(0, 0, 2, 2).zip_with(operator.add, 10) == Grid2(10, 10, 12, 12)
+
+    inst = Grid2(0, 0, 2, 2, step=(5, 5), origin=(0, 0)).zip_with(max, Grid2(-2, -2, 4, 4))
+    assert inst.step == Coord2(5, 5)
+    assert inst.origin == Coord2(0, 0)
+
+    inst = Grid2(0, 0, 2, 2, step=(5, 5), origin=(0, 0)).zip_with(operator.add, 10)
+    assert inst.step == Coord2(5, 5)
+    assert inst.origin == Coord2(0, 0)
+
+    inst = Grid2(0, 0, 2, 2, step=(5, 5), origin=(0, 0)).zip_with(max, Grid2(-2, -2, 4, 4), step=(10, 10))
+    assert inst.step == Coord2(10, 10)
+    assert inst.origin == Coord2(0, 0)
+
+    inst = Grid2(0, 0, 2, 2, step=(5, 5), origin=(0, 0)).zip_with(operator.add, 10, step=(10, 10))
+    assert inst.step == Coord2(10, 10)
+    assert inst.origin == Coord2(0, 0)
+
+    inst = Grid2(0, 0, 2, 2, step=(5, 5), origin=(0, 0)).zip_with(max, Grid2(-2, -2, 4, 4), origin=(4, 4))
+    assert inst.step == Coord2(5, 5)
+    assert inst.origin == Coord2(4, 4)
+
+    inst = Grid2(0, 0, 2, 2, step=(5, 5), origin=(0, 0)).zip_with(operator.add, 10, origin=(10, 10))
+    assert inst.step == Coord2(5, 5)
+    assert inst.origin == Coord2(10, 10)
