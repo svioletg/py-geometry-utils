@@ -744,3 +744,28 @@ class Grid2(Rect):
         offset_factor: Coord2 = (coord - tl_a) / (br_a - tl_a)
 
         return ((br_b - tl_b) * offset_factor) + tl_b
+
+    @override
+    def zip_with(self,
+            fn: Callable[[float, float], float],
+            other: Rect | tuple[float, float, float, float] | float,
+            *,
+            step: CoordOrTuple2 | None = None,
+            origin: CoordOrTuple2 | None = None,
+        ) -> Self:
+        """Combines this and another instance or tuple's values using ``fn``.
+
+        The values used are those returned by iterating over the instance—for :class:`Grid2`, that would be :data:`x1`,
+        :data:`y1`, :data:`x2`, and :data:`y2`.
+
+        :param step: What to set :data:`step` to for the returned instance. If ``None``, this instance's value is used.
+        :param origin: What to set :data:`origin` to for the returned instance.
+            If ``None``, this instance's value is used.
+        """
+        if not isinstance(other, Rect | tuple):
+            other = (other, other, other, other)
+
+        step = self.step if step is None else step
+        origin = self.origin if origin is None else origin
+
+        return self.__class__(*(fn(a, b) for a, b in zip(self, other, strict=True)), step=step, origin=origin)
