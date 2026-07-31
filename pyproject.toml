@@ -1,5 +1,5 @@
 [project]
-name = "geometry-utils"
+name = "py-geometry-utils"
 description = "Utilities for working with coordinates and rectangles/grids."
 authors = [
     { name = "Seth 'Violet' Gibbs" },
