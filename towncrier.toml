@@ -1,7 +1,7 @@
 [tool.towncrier]
 directory = "changes"
 filename="CHANGELOG.md"
-package = "geometry-utils"
+package = "py-geometry-utils"
 start_string = "<!-- towncrier release notes start -->\n"
 underlines = ["", "", ""]
 title_format = "## [{version}] - {project_date}"
