@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/geometry-utils
+      url: https://test.pypi.org/p/py-geometry-utils
     permissions:
       id-token: write
     steps:
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/geometry-utils
+      url: https://pypi.org/p/py-geometry-utils
     permissions:
       id-token: write
     steps:
