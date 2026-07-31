@@ -285,7 +285,7 @@ class Coord2:
         if not isinstance(other, Coord2 | tuple):
             other = (other, other)
 
-        return self.__class__(*(fn(a, b) for a, b in zip(self, other, strict=True)))
+        return self.__class__(fn(self.x, other[0]), fn(self.y, other[1]))
 
 class Rect:
     """Represents a rectangle using its top-left and bottom-right coordinates.
@@ -527,7 +527,12 @@ class Rect:
         if not isinstance(other, Rect | tuple):
             other = (other, other, other, other)
 
-        return self.__class__(*(fn(a, b) for a, b in zip(self, other, strict=True)))
+        return self.__class__(
+            fn(self.x1, other[0]),
+            fn(self.y1, other[1]),
+            fn(self.x2, other[2]),
+            fn(self.y2, other[3]),
+        )
 
 class Grid2(Rect):
     """Represents a 2D grid, with methods for iterating over its steps.
@@ -768,4 +773,11 @@ class Grid2(Rect):
         step = self.step if step is None else step
         origin = self.origin if origin is None else origin
 
-        return self.__class__(*(fn(a, b) for a, b in zip(self, other, strict=True)), step=step, origin=origin)
+        return self.__class__(
+            fn(self.x1, other[0]),
+            fn(self.y1, other[1]),
+            fn(self.x2, other[2]),
+            fn(self.y2, other[3]),
+            step=step,
+            origin=origin,
+        )
