@@ -1,4 +1,4 @@
-# geometry-utils
+# py-geometry-utils
 
 Provides utilities for working with coordinates, rectangles, and grids.
 
