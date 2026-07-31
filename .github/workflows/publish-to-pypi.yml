@@ -35,7 +35,7 @@ jobs:
         path: dist/
 
   publish-to-testpypi:
-    name: Publish Python distribution to TestPyPI
+    name: Publish to TestPyPI
     needs:
     - build
     runs-on: ubuntu-latest
@@ -57,8 +57,7 @@ jobs:
         repository-url: https://test.pypi.org/legacy/
 
   publish-to-pypi:
-    name: >-
-      Publish Python distribution to PyPI
+    name: Publish to production PyPI
     if: startswith(github.ref, 'refs/tags/')
     needs:
     - build
