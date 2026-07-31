@@ -554,7 +554,6 @@ class Grid2(Rect):
         :param step: Default step used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`.
         :param origin: Default origin used for :meth:`steps_x`, :meth:`steps_y`, and :meth:`steps`.
             If ``None``, the origin is set to the center coordinate of ``rect``.
-            If this coordinate is not within the bounds of ``rect``, ``ValueError`` is raised.
         :param mut: Whether this instance's attributes can be modified or not. If ``False``, ``TypeError`` is raised
             when attempting to reassign them, and ``step`` and ``origin`` will be made immutable as well.
         """
@@ -564,11 +563,6 @@ class Grid2(Rect):
             else Coord2(*step, mut=mut)
         self._origin = origin if isinstance(origin, Coord2) and mut \
             else Coord2(*self.center if origin is None else origin, mut=mut)
-
-        if not self._origin.in_bounds(self):
-            raise ValueError(
-                f"{self.__class__.__name__} origin coordinate {origin} is outside the grid's bounds: {self}",
-            )
 
     @property
     def step(self) -> Coord2:
@@ -669,7 +663,7 @@ class Grid2(Rect):
         """Yields X coordinates starting at ``origin`` and adding ``step`` while in range of the grid.
 
         .. note::
-            Yields no items if the step value is 0.
+            Yields no items if the step value is 0, or if ``origin`` is out of bounds.
 
         :param step: If ``None``, defaults to ``self.step.x``. If this value is 0, no values are yielded.
         :param origin: If ``None``, defaults to ``self.origin.y``.
@@ -690,7 +684,7 @@ class Grid2(Rect):
         """Yields Y coordinates starting at ``origin`` and adding ``step`` while in range of the grid.
 
         .. note::
-            Yields no items if the step value is 0.
+            Yields no items if the step value is 0, or if ``origin`` is out of bounds.
 
         :param step: If ``None``, defaults to ``self.step.y``. If this value is 0, no values are yielded.
         :param origin: If ``None``, defaults to ``self.origin.y``.
@@ -717,10 +711,9 @@ class Grid2(Rect):
         Coordinates are yielded going vertically first, e.g. ``(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), ...``.
 
         .. note::
-            Yields no items if both values of ``step`` are 0.
+            Yields no items if both values of ``step`` are 0, or if ``origin`` is out of bounds.
 
-        :param step: If ``None``, defaults to ``self.step``. If this value is equal to ``(0, 0)``, no values are
-            yielded.
+        :param step: If ``None``, defaults to ``self.step``.
         :param origin: If ``None``, defaults to ``self.origin``.
         """
         step = step if step is not None else self.step
