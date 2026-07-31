@@ -175,7 +175,7 @@ wheels = [
 ]
 
 [[package]]
-name = "geometry-utils"
+name = "py-geometry-utils"
 source = { editable = "." }
 
 [package.optional-dependencies]
