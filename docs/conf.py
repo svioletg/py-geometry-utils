@@ -8,7 +8,7 @@ from geometry import __version__  # noqa: D100, INP001
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'geometry-utils'
+project = 'py-geometry-utils'
 author = "Seth 'Violet' Gibbs"
 release = __version__
 
