@@ -1,8 +1,11 @@
 name: Publish Python distribution to PyPI and TestPyPI
 
-on: workflow_dispatch # Remove this and uncomment next two lines to enable
-  # release:
-  #   types: [published]
+on:
+  push:
+    branches:
+      - 'ci/*'
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -19,7 +22,7 @@ jobs:
         python-version: "3.x"
     - name: Install pypa/build
       run: >-
-        python3 -m 
+        python3 -m
         pip install
         build
         --user
