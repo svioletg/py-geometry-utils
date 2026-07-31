@@ -1,4 +1,4 @@
-geometry documentation
+|project| documentation
 ===============================
 
 .. toctree::
