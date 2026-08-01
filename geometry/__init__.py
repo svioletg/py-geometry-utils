@@ -106,26 +106,21 @@ class Coord2:
 
         return NotImplemented
 
-    def __gt__(self, value: Self | tuple[float, float]) -> bool:
-        """Compares the X and Y values of two coordinates, returns ``False`` for other objects."""
-        if isinstance(value, Coord2 | tuple):
-            return (self.x > value[0]) and (self.y > value[1])
+    def __ge__(self, value: Self | tuple[float, float]) -> bool:
+        """Returns ``True`` if at least one coordinate value is greater than or equal to the other, else ``False``."""
+        return self._compare(operator.ge, value)
 
-        return NotImplemented
+    def __gt__(self, value: Self | tuple[float, float]) -> bool:
+        """Returns ``True`` if at least one coordinate value is greater than the other, else ``False``."""
+        return self._compare(operator.gt, value)
 
     def __le__(self, value: Self | tuple[float, float]) -> bool:
-        """Compares the X and Y values of two coordinates, returns ``False`` for other objects."""
-        if isinstance(value, Coord2 | tuple):
-            return (self.x <= value[0]) and (self.y <= value[1])
-
-        return NotImplemented
+        """Returns ``True`` if at least one coordinate value is less than or equal to the other, else ``False``."""
+        return self._compare(operator.le, value)
 
     def __lt__(self, value: Self | tuple[float, float]) -> bool:
-        """Compares the X and Y values of two coordinates, returns ``False`` for other objects."""
-        if isinstance(value, Coord2 | tuple):
-            return (self.x < value[0]) and (self.y < value[1])
-
-        return NotImplemented
+        """Returns ``True`` if at least one coordinate value is less than the other, else ``False``."""
+        return self._compare(operator.lt, value)
 
     def __add__(self, other: Self | tuple[float, float] | float) -> Self:
         """Returns a new coordinate with this and another coordinate's X and Y values added together.

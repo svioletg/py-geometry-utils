@@ -4,7 +4,7 @@ from copy import copy, deepcopy
 
 import pytest
 
-from geometry import Coord2, Grid2, Rect
+from geometry import Coord2, Grid2, Rect, Tuple2
 from geometry.util import take_n
 from tests import assert_all, assert_attrs
 
@@ -62,57 +62,80 @@ def test_coord2_mag_eq() -> None:
     assert Coord2(1, 2) != Coord2(1, 0)
     assert Coord2(1, 2) != (1, 0)
 
-def test_coord2_mag_ge() -> None:
-    assert Coord2(1, 1) >= Coord2(1, 1)
-    assert Coord2(1, 1) >= (1, 1)
-    assert Coord2(1, 1) >= Coord2(1, 0)
-    assert Coord2(1, 1) >= (1, 0)
-    assert Coord2(1, 1) >= Coord2(0, 1)
-    assert Coord2(1, 1) >= (0, 1)
-    assert Coord2(1, 1) >= Coord2(0, 0)
-    assert Coord2(1, 1) >= (0, 0)
-    assert not Coord2(1, 1) >= Coord2(2, 2)
-    assert not Coord2(1, 1) >= (2, 2)
-    assert not Coord2(1, 1) >= Coord2(2, 1)
-    assert not Coord2(1, 1) >= (2, 1)
-    assert not Coord2(1, 1) >= Coord2(1, 2)
-    assert not Coord2(1, 1) >= (1, 2)
+def test_coord2_priv_compare() -> None:
+    assert Coord2(1, 2)._compare(operator.ge, Coord2(0, 0))  # noqa: SLF001
 
-def test_coord2_mag_gt() -> None:
-    assert Coord2(1, 1) > Coord2(0, 0)
-    assert Coord2(1, 1) > (0, 0)
-    assert not Coord2(1, 1) > Coord2(1, 1)
-    assert not Coord2(1, 1) > (1, 1)
-    assert not Coord2(1, 1) > Coord2(1, 0)
-    assert not Coord2(1, 1) > (1, 0)
-    assert not Coord2(1, 1) > Coord2(0, 1)
-    assert not Coord2(1, 1) > (0, 1)
+@pytest.mark.parametrize(('left', 'right', 'expected'),
+    params := [
+        ((1, 1), (0, 0), True),
+        ((1, 1), (0, 1), True),
+        ((1, 1), (1, 0), True),
+        ((1, 1), (1, 1), True),
+        ((1, 1), (1, 2), False),
+        ((1, 1), (2, 1), False),
+        ((1, 1), (2, 2), False),
+    ],
+    ids=['-'.join(str(p) for p in pset) for pset in params],
+)
+def test_coord2_mag_ge(left: Tuple2[float], right: Tuple2[float], expected: bool) -> None:
+    assert (left >= right) is expected
+    assert (Coord2(*left) >= right) is expected
+    assert (left >= Coord2(*right)) is expected
+    assert (Coord2(*left) >= Coord2(*right)) is expected
 
-def test_coord2_mag_le() -> None:
-    assert Coord2(1, 1) <= Coord2(1, 1)
-    assert Coord2(1, 1) <= (1, 1)
-    assert Coord2(1, 0) <= Coord2(1, 1)
-    assert Coord2(1, 0) <= (1, 1)
-    assert Coord2(0, 1) <= Coord2(1, 1)
-    assert Coord2(0, 1) <= (1, 1)
-    assert Coord2(0, 0) <= Coord2(1, 1)
-    assert Coord2(0, 0) <= (1, 1)
-    assert not Coord2(2, 2) <= Coord2(1, 1)
-    assert not Coord2(2, 2) <= (1, 1)
-    assert not Coord2(2, 1) <= Coord2(1, 1)
-    assert not Coord2(2, 1) <= (1, 1)
-    assert not Coord2(1, 2) <= Coord2(1, 1)
-    assert not Coord2(1, 2) <= (1, 1)
+@pytest.mark.parametrize(('left', 'right', 'expected'),
+    params := [
+        ((1, 1), (0, 0), True),
+        ((1, 1), (0, 1), True),
+        ((1, 1), (1, 0), True),
+        ((1, 1), (1, 1), False),
+        ((1, 1), (1, 2), False),
+        ((1, 1), (2, 1), False),
+        ((1, 1), (2, 2), False),
+    ],
+    ids=['-'.join(str(p) for p in pset) for pset in params],
+)
+def test_coord2_mag_gt(left: Tuple2[float], right: Tuple2[float], expected: bool) -> None:
+    assert (left > right) is expected
+    assert (Coord2(*left) > right) is expected
+    assert (left > Coord2(*right)) is expected
+    assert (Coord2(*left) > Coord2(*right)) is expected
 
-def test_coord2_mag_lt() -> None:
-    assert Coord2(0, 0) < Coord2(1, 1)
-    assert Coord2(0, 0) < (1, 1)
-    assert not Coord2(1, 1) < Coord2(1, 1)
-    assert not Coord2(1, 1) < (1, 1)
-    assert not Coord2(1, 0) < Coord2(1, 1)
-    assert not Coord2(1, 0) < (1, 1)
-    assert not Coord2(0, 1) < Coord2(1, 1)
-    assert not Coord2(0, 1) < (1, 1)
+@pytest.mark.parametrize(('left', 'right', 'expected'),
+    params := [
+        ((1, 1), (2, 2), True),
+        ((1, 1), (2, 1), True),
+        ((1, 1), (1, 2), True),
+        ((1, 1), (1, 1), True),
+        ((1, 1), (1, 0), False),
+        ((1, 1), (0, 1), False),
+        ((1, 1), (0, 0), False),
+    ],
+    ids=['-'.join(str(p) for p in pset) for pset in params],
+)
+def test_coord2_mag_le(left: Tuple2[float], right: Tuple2[float], expected: bool) -> None:
+    assert (left <= right) is expected
+    assert (Coord2(*left) <= right) is expected
+    assert (left <= Coord2(*right)) is expected
+    assert (Coord2(*left) <= Coord2(*right)) is expected
+
+@pytest.mark.parametrize(('left', 'right', 'expected'),
+    params := [
+        ((1, 1), (2, 2), True),
+        ((1, 1), (2, 1), True),
+        ((1, 1), (1, 2), True),
+        ((1, 1), (1, 1), False),
+        ((1, 1), (1, 0), False),
+        ((1, 1), (0, 1), False),
+        ((1, 1), (0, 0), False),
+    ],
+    ids=['-'.join(str(p) for p in pset) for pset in params],
+)
+def test_coord2_mag_lt(left: Tuple2[float], right: Tuple2[float], expected: bool) -> None:
+    assert (left < right) is expected
+    assert (Coord2(*left) < right) is expected
+    assert (left < Coord2(*right)) is expected
+    assert (Coord2(*left) < Coord2(*right)) is expected
 
 def test_coord2_mag_add() -> None:
     assert Coord2(1, 2) + Coord2(3, 4) == Coord2(4, 6)
