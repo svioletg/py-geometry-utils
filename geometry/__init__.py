@@ -10,6 +10,8 @@ from geometry.util import snap_num
 
 __version__ = '0.4.0'
 
+type Tuple2[T] = tuple[T, T]
+"""A tuple of 2 values of the same type."""
 type CoordOrTuple2 = Coord2 | tuple[float, float]
 """A :class:`Coord2` instance or a tuple of two ``float`` types as X and Y coordinates."""
 type RectOrTuple = Rect | tuple[float, float, float, float]
