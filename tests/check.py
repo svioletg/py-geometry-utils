@@ -98,10 +98,16 @@ def has_decorators(func: ast.FunctionDef, names: str | Iterable[str], *, mode: L
     )
 
 def make_test_name(func: str, *, cls: str = '') -> str:
-    magic = bool(DUNDER_REGEX.match(func))
+    prefix: str = ''
+
+    if func[0] == '_':
+        prefix = 'priv'
+        if bool(DUNDER_REGEX.match(func)):
+            prefix = 'mag'
+        func = func.strip('_')
 
     return 'test_' + '_'.join(
-        part for part in (cls.lower(), 'mag' if magic else '', DUNDER_REGEX.sub('\\1', func)) if part
+        part for part in (cls.lower(), prefix, func) if part
     )
 
 def make_test_def(func: ast.FunctionDef, *, cls: str = '') -> str:
