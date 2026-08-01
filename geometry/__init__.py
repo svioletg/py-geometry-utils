@@ -4,7 +4,7 @@ import operator
 from collections.abc import Callable, Generator
 from copy import copy
 from itertools import product
-from typing import Literal, Self, overload, override
+from typing import Literal, Self, cast, overload, override
 
 from geometry.util import snap_num
 
@@ -98,10 +98,11 @@ class Coord2:
 
         return False
 
-    def __ge__(self, value: Self | tuple[float, float]) -> bool:
-        """Compares the X and Y values of two coordinates, returns ``False`` for other objects."""
-        if isinstance(value, Coord2 | tuple):
-            return (self.x >= value[0]) and (self.y >= value[1])
+    def _compare(self, op: Callable[[Tuple2[float], Tuple2[float]], bool], other: Self | Tuple2[float]) -> bool:
+        if isinstance(other, tuple):
+            return op(self.as_tuple(), cast('Tuple2[float]', other))
+        if isinstance(other, Coord2):
+            return op(self.as_tuple(), other.as_tuple())
 
         return NotImplemented
 
