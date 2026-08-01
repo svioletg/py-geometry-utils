@@ -71,10 +71,6 @@ class Coord2:
         """Returns this coordinate in the format ``(x, y)``."""
         return f'({self.x}, {self.y})'
 
-    def __bool__(self) -> bool:
-        """Returns ``False`` if both X and Y values equal 0, otherwise returns ``True``."""
-        return not (self.x == self.y == 0)
-
     def __iter__(self) -> Generator[float]:
         """Yields the X and Y values of this coordinate."""
         yield from self.as_tuple()

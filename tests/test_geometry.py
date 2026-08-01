@@ -41,10 +41,10 @@ def test_coord2_mag_str() -> None:
     assert str(Coord2(1, 2)) == '(1, 2)'
 
 def test_coord2_mag_bool() -> None:
+    assert Coord2(0, 0)
     assert Coord2(0, 1)
     assert Coord2(1, 0)
     assert Coord2(1, 1)
-    assert not Coord2(0, 0)
 
 def test_coord2_mag_iter() -> None:
     assert list(Coord2(1, 2)) == [1, 2]
