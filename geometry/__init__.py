@@ -89,12 +89,12 @@ class Coord2:
         """Returns a new instance with the same values as this instance."""
         return self.__class__(self.x, self.y, mut=self.mutable)
 
-    def __eq__(self, value: object) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Compares the X and Y values of two coordinates, returns ``False`` for other objects."""
-        if isinstance(value, tuple):
-            return self.as_tuple() == value
-        if isinstance(value, self.__class__):
-            return self.as_tuple() == value.as_tuple()
+        if isinstance(other, tuple):
+            return self.as_tuple() == other
+        if isinstance(other, self.__class__):
+            return self.as_tuple() == other.as_tuple()
 
         return False
 
@@ -106,21 +106,21 @@ class Coord2:
 
         return NotImplemented
 
-    def __ge__(self, value: Self | tuple[float, float]) -> bool:
+    def __ge__(self, other: Self | tuple[float, float]) -> bool:
         """Returns ``True`` if at least one coordinate value is greater than or equal to the other, else ``False``."""
-        return self._compare(operator.ge, value)
+        return self._compare(operator.ge, other)
 
-    def __gt__(self, value: Self | tuple[float, float]) -> bool:
+    def __gt__(self, other: Self | tuple[float, float]) -> bool:
         """Returns ``True`` if at least one coordinate value is greater than the other, else ``False``."""
-        return self._compare(operator.gt, value)
+        return self._compare(operator.gt, other)
 
-    def __le__(self, value: Self | tuple[float, float]) -> bool:
+    def __le__(self, other: Self | tuple[float, float]) -> bool:
         """Returns ``True`` if at least one coordinate value is less than or equal to the other, else ``False``."""
-        return self._compare(operator.le, value)
+        return self._compare(operator.le, other)
 
-    def __lt__(self, value: Self | tuple[float, float]) -> bool:
+    def __lt__(self, other: Self | tuple[float, float]) -> bool:
         """Returns ``True`` if at least one coordinate value is less than the other, else ``False``."""
-        return self._compare(operator.lt, value)
+        return self._compare(operator.lt, other)
 
     def __add__(self, other: Self | tuple[float, float] | float) -> Self:
         """Returns a new coordinate with this and another coordinate's X and Y values added together.
