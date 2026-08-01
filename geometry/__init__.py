@@ -14,6 +14,8 @@ type Tuple2[T] = tuple[T, T]
 """A tuple of 2 values of the same type."""
 type CoordOrTuple2 = Coord2 | tuple[float, float]
 """A :class:`Coord2` instance or a tuple of two ``float`` types as X and Y coordinates."""
+type Tuple4[T] = tuple[T, T, T, T]
+"""A tuple of 4 values of the same type."""
 type RectOrTuple = Rect | tuple[float, float, float, float]
 """A :class:`Rect` instance or a tuple of four ``float`` types as X1, Y1, X2, and Y2 coordinates."""
 
@@ -465,10 +467,10 @@ class Rect:
         )
 
     @overload
-    def as_tuple(self, map_fn: None = None) -> tuple[float, float, float, float]: ...
+    def as_tuple(self, map_fn: None = None) -> Tuple4[float]: ...
     @overload
-    def as_tuple[U](self, map_fn: Callable[[float], U]) -> tuple[U, U, U, U]: ...
-    def as_tuple[U](self, map_fn: Callable[[float], U] | None = None) -> tuple[object, object, object, object]:
+    def as_tuple[U](self, map_fn: Callable[[float], U]) -> Tuple4[U]: ...
+    def as_tuple[U](self, map_fn: Callable[[float], U] | None = None) -> Tuple4[object]:
         """Returns the X1, Y1, X2, and Y2 values as a tuple."""
         if map_fn:
             return (map_fn(self.x1), map_fn(self.y1), map_fn(self.x2), map_fn(self.y2))
@@ -511,7 +513,7 @@ class Rect:
 
     def zip_with(self,
             fn: Callable[[float, float], float],
-            other: Self | tuple[float, float, float, float] | float,
+            other: Self | Tuple4[float] | float,
         ) -> Self:
         """Combines this and another instance or tuple's values using ``fn``.
 
@@ -747,7 +749,7 @@ class Grid2(Rect):
     @override
     def zip_with(self,
             fn: Callable[[float, float], float],
-            other: Rect | tuple[float, float, float, float] | float,
+            other: Rect | Tuple4[float] | float,
             *,
             step: CoordOrTuple2 | None = None,
             origin: CoordOrTuple2 | None = None,
