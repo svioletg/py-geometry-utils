@@ -9,6 +9,39 @@ This project uses [towncrier](https://towncrier.readthedocs.io) to generate rele
 
 <!-- towncrier release notes start -->
 
+## [0.5.0] - 2026-08-02
+
+### Added
+
+- Added method `Coord2._compare()` to handle all comparisons except `==`
+- Added method `Coord2.zip_with()`
+- Added method `Grid2.zip_with()
+- Added method `Rect.zip_with()
+- Added support for `# testcheck: ignore` comments on class definitions
+- Added type alias `Tuple2`
+- Added type alias `Tuple4`
+
+### Changed
+
+- Initializing `Grid2` with an out-of-bounds `origin` value no longer raises an
+  error (#7)
+  - "steps" methods will yield no steps when `Grid2.origin` is out of bounds
+- Attribute `tests.check.FunctionFinder.functions` now uses `ast.ClassDef`
+  nodes for keys instead of class name strings
+- Rename `tests.check.FUNC_IGNORE_REGEX` to `IGNORE_REGEX`
+- Renamed parameter `value` to `other` in `Coord2` methods `__eq__`, `__ge__`,
+  `__gt__`, `__le__`, and `__lt__` for consistency with other methods
+- `Coord2` comparison methods `__ge__`, `__gt__`, `__le__`, and `__lt__` all
+  now `Coord2._compare()` instead of implementing the logic in themselves
+- `Coord2` objects are now always truthy, removed `__bool__` implementation
+- `tests.check.make_test_name()` now adds a prefix for private (and not magic)
+  methods
+
+### Removed
+
+- Removed method `Coord2.binop()`
+- Removed type alias `BinaryOp`
+
 ## [0.4.0] - 2026-07-30
 
 ### Added
