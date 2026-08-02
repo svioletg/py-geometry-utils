@@ -175,37 +175,6 @@ wheels = [
 ]
 
 [[package]]
-name = "py-geometry-utils"
-source = { editable = "." }
-
-[package.optional-dependencies]
-dev = [
-    { name = "pytest" },
-    { name = "ruff" },
-    { name = "towncrier" },
-    { name = "ty" },
-]
-docs = [
-    { name = "furo" },
-    { name = "myst-parser" },
-    { name = "sphinx" },
-    { name = "sphinx-autobuild" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "furo", marker = "extra == 'docs'", specifier = ">=2025.12.19" },
-    { name = "myst-parser", marker = "extra == 'docs'", specifier = ">=5.1.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.1.1" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.15.22" },
-    { name = "sphinx", marker = "extra == 'docs'", specifier = ">=9.1" },
-    { name = "sphinx-autobuild", marker = "extra == 'docs'", specifier = ">=2025.8.25" },
-    { name = "towncrier", marker = "extra == 'dev'", specifier = ">=25.8.0" },
-    { name = "ty", marker = "extra == 'dev'", specifier = ">=0.0.61" },
-]
-provides-extras = ["dev", "docs"]
-
-[[package]]
 name = "h11"
 version = "0.16.0"
 source = { registry = "https://pypi.org/simple" }
@@ -382,6 +351,48 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f9/e2/3e91f31a7d2b083fe6ef3fa267035b518369d9511ffab804f839851d2779/pluggy-1.6.0.tar.gz", hash = "sha256:7dcc130b76258d33b90f61b658791dede3486c3e6bfb003ee5c9bfb396dd22f3", size = 69412, upload-time = "2025-05-15T12:30:07.975Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/54/20/4d324d65cc6d9205fabedc306948156824eb9f0ee1633355a8f7ec5c66bf/pluggy-1.6.0-py3-none-any.whl", hash = "sha256:e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746", size = 20538, upload-time = "2025-05-15T12:30:06.134Z" },
+]
+
+[[package]]
+name = "py-geometry-utils"
+source = { editable = "." }
+
+[package.optional-dependencies]
+dev = [
+    { name = "py-maybetype" },
+    { name = "pytest" },
+    { name = "ruff" },
+    { name = "towncrier" },
+    { name = "ty" },
+]
+docs = [
+    { name = "furo" },
+    { name = "myst-parser" },
+    { name = "sphinx" },
+    { name = "sphinx-autobuild" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "furo", marker = "extra == 'docs'", specifier = ">=2025.12.19" },
+    { name = "myst-parser", marker = "extra == 'docs'", specifier = ">=5.1.0" },
+    { name = "py-maybetype", marker = "extra == 'dev'", specifier = ">=0.14.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.1.1" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.15.22" },
+    { name = "sphinx", marker = "extra == 'docs'", specifier = ">=9.1" },
+    { name = "sphinx-autobuild", marker = "extra == 'docs'", specifier = ">=2025.8.25" },
+    { name = "towncrier", marker = "extra == 'dev'", specifier = ">=25.8.0" },
+    { name = "ty", marker = "extra == 'dev'", specifier = ">=0.0.61" },
+]
+provides-extras = ["dev", "docs"]
+
+[[package]]
+name = "py-maybetype"
+version = "0.14.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/2a/34/6beb4faf2e2b70e2b8bf1f4f6b478b227c00bf930b97898c49b5a89d6a9b/py_maybetype-0.14.0.tar.gz", hash = "sha256:e44acf3fa5e605bced653bd1aa3ed660ed000ee10db799d6a55a157409d61691", size = 67920, upload-time = "2026-07-10T21:23:59.562Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f0/61/9956326d4a9e9d319bf2f2d01c8dec8f188400087eddca2b6f031b336416/py_maybetype-0.14.0-py3-none-any.whl", hash = "sha256:741d54b82c135573cefe218c1374accd40fcd0e9b69f1c3814bc088902a2a7a5", size = 10130, upload-time = "2026-07-10T21:23:58.327Z" },
 ]
 
 [[package]]
