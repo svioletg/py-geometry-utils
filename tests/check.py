@@ -17,7 +17,7 @@ PATH_EXCLUDE: tuple[Path, ...] = (
 
 DUNDER_REGEX: re.Pattern = re.compile(r'^__(\w+)__$')
 
-FUNC_IGNORE_REGEX: re.Pattern = re.compile(r'# testcheck: ignore\b')
+IGNORE_REGEX: re.Pattern = re.compile(r'# testcheck: ignore\b')
 
 class FileContentDict(TypedDict):  # noqa: D101
     raw: str
@@ -179,7 +179,7 @@ def main() -> int:  # noqa: C901
             for fn in fns:
                 pre_def_line, def_line = file_content[fp]['lines'][fn.lineno - 2:fn.lineno]
 
-                if FUNC_IGNORE_REGEX.search(def_line) or FUNC_IGNORE_REGEX.search(pre_def_line):
+                if IGNORE_REGEX.search(def_line) or IGNORE_REGEX.search(pre_def_line):
                     continue
                 if has_decorators(fn, ('overload', f'{fn.name}.setter')):
                     continue
