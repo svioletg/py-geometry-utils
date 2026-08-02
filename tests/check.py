@@ -25,23 +25,23 @@ class FileContentDict(TypedDict):  # noqa: D101
 
 class FunctionFinder(ast.NodeVisitor):  # noqa: D101
     current_class: ast.ClassDef | None = None
-    functions: dict[str, list[ast.FunctionDef]]
+    functions: dict[ast.ClassDef | None, list[ast.FunctionDef]]
 
     def __init__(self) -> None:
         self.current_class = None
-        self.functions: dict[str, list[ast.FunctionDef]] = {
-            '': [],
+        self.functions: dict[ast.ClassDef | None, list[ast.FunctionDef]] = {
+            None: [],
         }
 
         super().__init__()
 
     @classmethod
-    def from_file(cls, fp: str | Path) -> dict[str, list[ast.FunctionDef]]:
+    def from_file(cls, fp: str | Path) -> dict[ast.ClassDef | None, list[ast.FunctionDef]]:
         """Returns a dictionary of function names to ``ast.FunctionDef`` found in the contents of ``fp``."""
         return cls.from_str(Path(fp).read_text('utf-8'))
 
     @classmethod
-    def from_str(cls, s: str) -> dict[str, list[ast.FunctionDef]]:
+    def from_str(cls, s: str) -> dict[ast.ClassDef | None, list[ast.FunctionDef]]:
         """Returns a dictionary of function names to ``ast.FunctionDef`` found in ``s``."""
         tree = ast.parse(s)
         inst = cls()
@@ -55,13 +55,10 @@ class FunctionFinder(ast.NodeVisitor):  # noqa: D101
         self.current_class = None
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:  # noqa: D102
-        if self.current_class:
-            cls_name = self.current_class.name
-            if cls_name not in self.functions:
-                self.functions[cls_name] = []
-            self.functions[cls_name].append(node)
-        else:
-            self.functions[''].append(node)
+        cls = self.current_class
+        if cls not in self.functions:
+            self.functions[cls] = []
+        self.functions[cls].append(node)
 
 def _assemble_deco_name(node: ast.expr) -> str:
     def _dive(node: ast.expr) -> str:
@@ -152,7 +149,7 @@ def main() -> int:  # noqa: C901
         (fp for fp in targets if fp.is_file()),
     )
 
-    functions: dict[Path, dict[str, list[ast.FunctionDef]]] = {}
+    functions: dict[Path, dict[ast.ClassDef | None, list[ast.FunctionDef]]] = {}
     file_content: dict[Path, FileContentDict] = {}
 
     for fp in target_files:
@@ -168,7 +165,8 @@ def main() -> int:  # noqa: C901
         functions[fp] = FunctionFinder.from_str(content)
 
     tests_found: dict[Path, list[str]] = {
-        fp:[fn.name for fn in FunctionFinder.from_file(fp)['']]
+        # Assumption made that no tests are defined in classes
+        fp:[fn.name for fn in FunctionFinder.from_file(fp)[None]]
         for fp in Path('tests/').glob('test_*.py')
     }
     new_tests: dict[Path, list[str]] = {}
@@ -177,6 +175,7 @@ def main() -> int:  # noqa: C901
         test_path = Path('tests', f'test_{fp.parent.stem}.py' if fp.stem == '__init__' else f'test_{fp.stem}.py')
         new_tests[test_path] = []
         for cls, fns in kv.items():
+            cls_name = cls.name if cls else ''
             for fn in fns:
                 pre_def_line, def_line = file_content[fp]['lines'][fn.lineno - 2:fn.lineno]
 
@@ -185,11 +184,11 @@ def main() -> int:  # noqa: C901
                 if has_decorators(fn, ('overload', f'{fn.name}.setter')):
                     continue
 
-                test_name = make_test_name(fn.name, cls=cls)
+                test_name = make_test_name(fn.name, cls=cls_name)
                 if test_name not in tests_found[test_path]:
-                    print(f'{fp}:{fn.lineno}: no test for {cls or '<mod>'}.{fn.name}'
+                    print(f'{fp}:{fn.lineno}: no test for {cls_name or '<mod>'}.{fn.name}'
                         + f' (expected at {test_path.with_suffix('')}.{test_name})')
-                    new_tests[test_path].append(make_test_def(fn, cls=cls))
+                    new_tests[test_path].append(make_test_def(fn, cls=cls_name))
         if not new_tests[test_path]:
             del new_tests[test_path]
 
