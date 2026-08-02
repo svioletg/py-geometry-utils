@@ -174,6 +174,12 @@ def main() -> int:  # noqa: C901
         test_path = Path('tests', f'test_{fp.parent.stem}.py' if fp.stem == '__init__' else f'test_{fp.stem}.py')
         new_tests[test_path] = []
         for cls, fns in kv.items():
+            if cls:
+                pre_def_line, def_line = file_content[fp]['lines'][cls.lineno - 2:cls.lineno]
+
+                if IGNORE_REGEX.search(def_line) or IGNORE_REGEX.search(pre_def_line):
+                    continue
+
             cls_name = cls.name if cls else ''
             for fn in fns:
                 pre_def_line, def_line = file_content[fp]['lines'][fn.lineno - 2:fn.lineno]
