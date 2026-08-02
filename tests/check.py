@@ -16,7 +16,6 @@ PATH_EXCLUDE: tuple[Path, ...] = (
 )
 
 DUNDER_REGEX: re.Pattern = re.compile(r'^__(\w+)__$')
-
 IGNORE_REGEX: re.Pattern = re.compile(r'# testcheck: ignore\b')
 
 class FileContentDict(TypedDict):  # noqa: D101
