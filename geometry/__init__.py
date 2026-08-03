@@ -214,13 +214,14 @@ class Coord2:
 
         return (self.x, self.y)
 
-    def distance(self, other: CoordOrTuple2, mode: Literal['euclid', 'taxi'] = 'taxi') -> float:
+    def distance(self, other: CoordOrTuple2, mode: Literal['chebyshev', 'euclid', 'taxi'] = 'taxi') -> float:
         """Returns the euclidean or taxicab distance from this coordinate to ``other`` based on ``mode``.
 
-        :param mode: ``'euclid'`` will return the euclidean distance from ``self`` to ``other``, ``'taxi'`` returns the
-            taxicab distance.
+        :param mode: How to calculate the distance; either chebyshev distance, euclidean distance, or taxicab distance.
         """
         match mode:
+            case 'chebyshev':
+                return max(abs(other[0] - self.x), abs(other[1] - self.y))
             case 'euclid':
                 return math.sqrt(((self[0] - other[0]) ** 2) + ((self[1] - other[1]) ** 2))
             case 'taxi':
