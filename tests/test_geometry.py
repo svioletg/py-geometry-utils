@@ -205,11 +205,32 @@ def test_coord2_as_tuple() -> None:
     assert Coord2(1.0, 2.0).as_tuple(int) == (1, 2)
     assert Coord2(1.0, 2.0).as_tuple(str) == ('1.0', '2.0')
 
-def test_coord2_distance() -> None:
-    a, b = Coord2(1, 2), Coord2(5, 10)
-    assert a.distance(b, 'taxi') == b.distance(a, 'taxi') == 12  # noqa: PLR2004
-    assert round(a.distance(b, 'euclid'), 4) == round(b.distance(a, 'euclid'), 4) == 8.9443  # noqa: PLR2004
-    assert a.distance(b, 'chebyshev') == 8  # noqa: PLR2004
+@pytest.mark.parametrize(('a', 'b', 'chebyshev', 'euclid', 'taxi'),
+    params := [
+        ((0, 0), (0, 0), 0, 0, 0),
+        ((0, 0), (0, 1), 1, 1, 1),
+        ((0, 0), (1, 0), 1, 1, 1),
+        ((0, 0), (1, 1), 1, 1.41, 2),
+        ((0, 0), (1, 2), 2, 2.24, 3),
+        ((0, 0), (2, 1), 2, 2.24, 3),
+        ((0, 0), (2, 2), 2, 2.83, 4),
+    ],
+    ids=['-'.join(str(p) for p in pset) for pset in params],
+)
+def test_coord2_distance(a: Tuple2[float], b: Tuple2[float], chebyshev: float, euclid: float, taxi: float) -> None:
+    assert round(Coord2(*a).distance(Coord2(*b), 'chebyshev'), 2) == chebyshev
+    assert round(Coord2(*a).distance(b, 'chebyshev'), 2) == chebyshev
+    assert round(Coord2(*a).distance(Coord2(*b), 'euclid'), 2) == euclid
+    assert round(Coord2(*a).distance(b, 'euclid'), 2) == euclid
+    assert round(Coord2(*a).distance(Coord2(*b), 'taxi'), 2) == taxi
+    assert round(Coord2(*a).distance(b, 'taxi'), 2) == taxi
+
+    assert round(Coord2(*b).distance(Coord2(*a), 'chebyshev'), 2) == chebyshev
+    assert round(Coord2(*b).distance(a, 'chebyshev'), 2) == chebyshev
+    assert round(Coord2(*b).distance(Coord2(*a), 'euclid'), 2) == euclid
+    assert round(Coord2(*b).distance(a, 'euclid'), 2) == euclid
+    assert round(Coord2(*b).distance(Coord2(*a), 'taxi'), 2) == taxi
+    assert round(Coord2(*b).distance(a, 'taxi'), 2) == taxi
 
 def test_coord2_format() -> None:
     assert Coord2(1, 2).format('{x},{y}') == '1,2'
