@@ -209,6 +209,7 @@ def test_coord2_distance() -> None:
     a, b = Coord2(1, 2), Coord2(5, 10)
     assert a.distance(b, 'taxi') == b.distance(a, 'taxi') == 12  # noqa: PLR2004
     assert round(a.distance(b, 'euclid'), 4) == round(b.distance(a, 'euclid'), 4) == 8.9443  # noqa: PLR2004
+    assert a.distance(b, 'chebyshev') == 8  # noqa: PLR2004
 
 def test_coord2_format() -> None:
     assert Coord2(1, 2).format('{x},{y}') == '1,2'
