@@ -230,7 +230,7 @@ class Coord2:
         return s.format(x=self.x, y=self.y)
 
     def in_bounds(self, rect: RectOrTuple, *, edge_ok: bool = True) -> bool:
-        """Returns whether this coordinate is within a rectangle's bounds, not counting the edge.
+        """Returns whether this coordinate is within a rectangle's bounds.
 
         :param edge_ok: Whether the coordinate being on the rectangle's edge counts as in bounds or not.
 
