@@ -108,20 +108,16 @@ class Coord2:
 
         return NotImplemented
 
-    def __ge__(self, other: Self | tuple[float, float]) -> bool:
-        """Returns ``True`` if at least one coordinate value is greater than or equal to the other, else ``False``."""
+    def __ge__(self, other: Self | tuple[float, float]) -> bool:  # noqa: D105
         return self._compare(operator.ge, other)
 
-    def __gt__(self, other: Self | tuple[float, float]) -> bool:
-        """Returns ``True`` if at least one coordinate value is greater than the other, else ``False``."""
+    def __gt__(self, other: Self | tuple[float, float]) -> bool:  # noqa: D105
         return self._compare(operator.gt, other)
 
-    def __le__(self, other: Self | tuple[float, float]) -> bool:
-        """Returns ``True`` if at least one coordinate value is less than or equal to the other, else ``False``."""
+    def __le__(self, other: Self | tuple[float, float]) -> bool:  # noqa: D105
         return self._compare(operator.le, other)
 
-    def __lt__(self, other: Self | tuple[float, float]) -> bool:
-        """Returns ``True`` if at least one coordinate value is less than the other, else ``False``."""
+    def __lt__(self, other: Self | tuple[float, float]) -> bool:  # noqa: D105
         return self._compare(operator.lt, other)
 
     def __add__(self, other: Self | tuple[float, float] | float) -> Self:
