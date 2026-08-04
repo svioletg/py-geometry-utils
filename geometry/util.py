@@ -18,6 +18,10 @@ def snap_num(num: float, mult: float, snap_fn: Callable[[float], int] = round) -
     """
     return mult * (snap_fn(num / mult))
 
+def lerp(a: float, b: float, factor: float) -> float:
+    """Returns the linear interpolation of ``a`` and ``b`` by ``factor``."""
+    return a + factor * (b - a)
+
 def partition[T](it: Iterable[T], predicate: Callable[[T], bool]) -> tuple[list[T], list[T]]:
     """Separates ``it`` into two lists based on whether ``predicate(i)`` is true for each given item.
 
