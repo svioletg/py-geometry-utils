@@ -249,6 +249,16 @@ def test_coord2_in_bounds() -> None:
     assert not Coord2(-1, -1).in_bounds((0, 0, 2, 2))
     assert not Coord2(3, 3).in_bounds((0, 0, 2, 2))
 
+def test_coord2_lerp() -> None:
+    assert Coord2(0, 0).lerp(Coord2(1, 1), 0) == Coord2(0, 0)
+    assert Coord2(0, 0).lerp(Coord2(1, 1), 1) == Coord2(1, 1)
+    assert Coord2(0, 0).lerp(Coord2(1, 1), 0.5) == Coord2(0.5, 0.5)
+    assert Coord2(0, 0).lerp(Coord2(-1, -1), 0.5) == Coord2(-0.5, -0.5)
+    assert Coord2(1, 2).lerp(Coord2(2, 4), 0) == Coord2(1, 2)
+    assert Coord2(1, 2).lerp(Coord2(2, 4), 1) == Coord2(2, 4)
+    assert Coord2(1, 2).lerp(Coord2(2, 4), 0.5) == Coord2(1.5, 3.0)
+    assert Coord2(-1, -2).lerp(Coord2(-2, -4), 0.5) == Coord2(-1.5, -3.0)
+
 def test_coord2_map() -> None:
     assert Coord2(1, 2).map(double) == Coord2(2, 4)
 

@@ -244,6 +244,14 @@ class Coord2:
         return (rect[0] <= self.x <= rect[2]) and (rect[1] <= self.y <= rect[3]) \
             if edge_ok else (rect[0] < self.x < rect[2]) and (rect[1] < self.y < rect[3])
 
+    def lerp(self, other: CoordOrTuple2, factor: float) -> Self:
+        """Returns a new coordinate from this coordinate moved straight toward another by ``factor``.
+
+        >>> assert Coord2(0, 0).lerp((1, 1), 0.5) == Coord2(0.5, 0.5)
+        >>> assert Coord2(1, 2).lerp((2, 4), 0.5) == Coord2(1.5, 3)
+        """
+        return self.__class__((self.x + factor * (other[0] - self.x)), (self.y + factor * (other[1] - self.y)))
+
     def map(self, fn: Callable[[float], float]) -> Self:
         """Returns a new instance of this class with ``fn`` applied to its ``x`` and ``y`` attributes."""
         return self.__class__(fn(self.x), fn(self.y))
