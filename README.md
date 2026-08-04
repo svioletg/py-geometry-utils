@@ -2,6 +2,9 @@
 
 Provides utilities for working with coordinates, rectangles, and grids.
 
+> [!WARNING]
+> This library is still in beta, breaking changes between releases are likely for 0.x versions.
+
 Initially [part of a different project](https://github.com/svioletg/py-squaremap-combiner/blob/47f30bffb5de121fbf5ce17621ce3b8127cd36c3/src/squaremap_combine/geo.py),
 I wanted to use it in a few other projects so I decided to separate it out into its own package.
 
