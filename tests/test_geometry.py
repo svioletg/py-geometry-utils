@@ -246,6 +246,37 @@ def test_coord2_floor() -> None:
     assert Coord2(1.5, 2.5).floor() == Coord2(1, 2)
     assert Coord2(1.6, 2.6).floor() == Coord2(1, 2)
 
+@pytest.mark.parametrize(('a', 'b'),
+    [
+        ((0, 0), (2, 0)),
+        ((0, 0), (0, 2)),
+        ((0, 0), (2, 2)),
+        ((0, 0), (1, 2)),
+        ((0, 0), (2, 1)),
+        ((0, 0), (-2, 0)),
+        ((0, 0), (0, -2)),
+        ((0, 0), (-2, -2)),
+        ((0, 0), (-1, -2)),
+        ((0, 0), (-2, -1)),
+    ],
+)
+def test_coord2_intersects(a: Tuple2[float], b: Tuple2[float]) -> None:
+    f_start, f_end = -1.5, 1.5
+    factor = f_start
+
+    c_a = Coord2(*a)
+    c_b = Coord2(*b)
+
+    # The lerp'd points should intersect if factor is between 0 and 1
+    while factor <= f_end:
+        should_pass = (0 <= factor <= 1)
+        p = c_a.lerp(b, factor).round(2)
+        assert p.intersects(a, b) == should_pass, (factor, p)
+        assert p.intersects(c_a, b) == should_pass, (factor, p)
+        assert p.intersects(a, c_b) == should_pass, (factor, p)
+        assert p.intersects(c_a, c_b) == should_pass, (factor, p)
+        factor = round(factor + 0.1, 2)
+
 def test_coord2_in_bounds() -> None:
     # If it works with Rect() and tuple() each once then we dont need to keep checking that
     assert Coord2(1, 1).in_bounds(Rect(0, 0, 2, 2))
