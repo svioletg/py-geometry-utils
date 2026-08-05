@@ -237,6 +237,28 @@ class Coord2:
         """Floors both values of this coordinate."""
         return self.__class__(math.floor(self.x), math.floor(self.y))
 
+    def intersects(self, a: CoordOrTuple2, b: CoordOrTuple2, *, rel_tol: float = 1e-09, abs_tol: float = 0.0) -> bool:
+        """Returns whether this coordinate intersects the line drawn from ``a`` to ``b``.
+
+        ``rel_tol`` and ``abs_tol`` values will be passed to the :func:`math.isclose` call to fine tune how close the
+        point needs to be to the line; see the documentation for ``isclose`` for details.
+        """
+        ax, ay = (a[0], a[1]) if isinstance(a, tuple) else (a.x, a.y)
+        bx, by = (b[0], b[1]) if isinstance(b, tuple) else (b.x, b.y)
+
+        # If the line is straight, we can just do a comparison check; *much* faster than using `.distance()`
+        if ax == bx:
+            return False if not math.isclose(self.x, ax) else (min(ay, by) <= self.y <= max(ay, by))
+        if ay == by:
+            return False if not math.isclose(self.y, ay) else (min(ax, bx) <= self.x <= max(ax, bx))
+
+        return math.isclose(
+            self.distance(a, 'euclid') + self.distance(b, 'euclid'),
+            Coord2(ax, ay).distance(b, 'euclid'),
+            rel_tol=rel_tol,
+            abs_tol=abs_tol,
+        )
+
     def in_bounds(self, rect: RectOrTuple, *, edge_ok: bool = True) -> bool:
         """Returns whether this coordinate is within a rectangle's bounds.
 
