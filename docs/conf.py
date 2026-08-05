@@ -20,6 +20,10 @@ extensions = [
     'myst_parser',
 ]
 
+myst_enable_extensions = [
+    'alert',
+]
+
 autodoc_member_order = 'bysource'
 autodoc_default_options = {
     'exclude-members': '__weakref__',
