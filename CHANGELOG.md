@@ -9,6 +9,8 @@ This project uses [towncrier](https://towncrier.readthedocs.io) to generate rele
 
 <!-- towncrier release notes start -->
 
+---
+
 ## [0.5.0] - 2026-08-02
 
 ### Added
