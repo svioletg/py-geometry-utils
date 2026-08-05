@@ -252,6 +252,35 @@ class Coord2:
         """
         return self.__class__((self.x + factor * (other[0] - self.x)), (self.y + factor * (other[1] - self.y)))
 
+    def lerp_iter(self, other: CoordOrTuple2, step: float = 0.1, *, start: float = 0, end: float = 1) \
+        -> Generator[Self]:
+        """Yields coordinates moving from ``self`` toward ``other`` by ``step``.
+
+        Yields ``self.lerp(other, factor)``, with the initial factor value being ``start``. The lerp factor is then
+        increased by ``step`` each iteration while ``factor <= end`` if ``step`` is positive, or if ``factor >= end`` if
+        ``step`` is negative.
+
+        :param start: The lerp factor to start from.
+        :param end: The lerp factor to end at.
+
+        :raises ValueError:
+            ``step`` is 0, or ``step``, ``start``, and ``end`` are set to values such that this generator would yield
+            infinitely.
+        """
+        if step == 0:
+            raise ValueError("lerp_iter() parameter 'step' cannot be 0")
+
+        if (end < start) and (step > 0):
+            raise ValueError(f"'end' must be greater than 'start' if 'step' is positive: {step!r}")
+        if (end > start) and (step < 0):
+            raise ValueError(f"'end' must be less than 'start' if 'step' is negative: {step!r}")
+
+        factor: float = start
+
+        while (factor <= end) if step > 0 else (factor >= end):
+            yield self.lerp(other, factor)
+            factor += step
+
     def map(self, fn: Callable[[float], float]) -> Self:
         """Returns a new instance of this class with ``fn`` applied to its ``x`` and ``y`` attributes."""
         return self.__class__(fn(self.x), fn(self.y))

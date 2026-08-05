@@ -6,7 +6,7 @@ import pytest
 
 from geometry import Coord2, Grid2, Rect, Tuple2
 from geometry.util import take_n
-from tests import assert_all, assert_attrs
+from tests import assert_all, assert_attrs, assert_yields
 
 
 def double(n: float) -> float:
@@ -258,6 +258,88 @@ def test_coord2_lerp() -> None:
     assert Coord2(1, 2).lerp(Coord2(2, 4), 1) == Coord2(2, 4)
     assert Coord2(1, 2).lerp(Coord2(2, 4), 0.5) == Coord2(1.5, 3.0)
     assert Coord2(-1, -2).lerp(Coord2(-2, -4), 0.5) == Coord2(-1.5, -3.0)
+
+def test_coord2_lerp_iter() -> None:
+    assert_yields(Coord2(0, 0).lerp_iter(Coord2(0, 0)), [(0, 0)] * 11)
+    assert_yields(Coord2(0, 0).lerp_iter(Coord2(1, 1), step=2), [(0, 0)])
+
+    assert_yields(
+        (c.map(lambda n: round(n, 1)) for c in Coord2(0, 0).lerp_iter(Coord2(1, 1), 0.1)),
+        [
+            (0, 0),
+            (0.1, 0.1),
+            (0.2, 0.2),
+            (0.3, 0.3),
+            (0.4, 0.4),
+            (0.5, 0.5),
+            (0.6, 0.6),
+            (0.7, 0.7),
+            (0.8, 0.8),
+            (0.9, 0.9),
+            (1, 1),
+        ],
+    )
+    assert_yields(
+        (c.map(lambda n: round(n, 1)) for c in Coord2(0, 0).lerp_iter(Coord2(1, 1), 0.1, start=0.5)),
+        [
+            (0.5, 0.5),
+            (0.6, 0.6),
+            (0.7, 0.7),
+            (0.8, 0.8),
+            (0.9, 0.9),
+            (1, 1),
+        ],
+    )
+    assert_yields(
+        (c.map(lambda n: round(n, 1)) for c in Coord2(0, 0).lerp_iter(Coord2(1, 1), 0.1, end=0.5)),
+        [
+            (0, 0),
+            (0.1, 0.1),
+            (0.2, 0.2),
+            (0.3, 0.3),
+            (0.4, 0.4),
+            (0.5, 0.5),
+        ],
+    )
+
+    assert_yields(
+        (c.map(lambda n: round(n, 1)) for c in Coord2(0, 0).lerp_iter(Coord2(1, 1), -0.1, start=1, end=0)),
+        [
+            (1, 1),
+            (0.9, 0.9),
+            (0.8, 0.8),
+            (0.7, 0.7),
+            (0.6, 0.6),
+            (0.5, 0.5),
+            (0.4, 0.4),
+            (0.3, 0.3),
+            (0.2, 0.2),
+            (0.1, 0.1),
+            (0, 0),
+        ],
+    )
+    assert_yields(
+        (c.map(lambda n: round(n, 1)) for c in Coord2(0, 0).lerp_iter(Coord2(1, 1), -0.1, start=0.5, end=0)),
+        [
+            (0.5, 0.5),
+            (0.4, 0.4),
+            (0.3, 0.3),
+            (0.2, 0.2),
+            (0.1, 0.1),
+            (0, 0),
+        ],
+    )
+    assert_yields(
+        (c.map(lambda n: round(n, 1)) for c in Coord2(0, 0).lerp_iter(Coord2(1, 1), -0.1, start=1, end=0.5)),
+        [
+            (1, 1),
+            (0.9, 0.9),
+            (0.8, 0.8),
+            (0.7, 0.7),
+            (0.6, 0.6),
+            (0.5, 0.5),
+        ],
+    )
 
 def test_coord2_map() -> None:
     assert Coord2(1, 2).map(double) == Coord2(2, 4)
