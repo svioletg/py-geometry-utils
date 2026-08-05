@@ -210,6 +210,10 @@ class Coord2:
 
         return (self.x, self.y)
 
+    def ceil(self) -> Self:
+        """Rounds up both values of this coordinate."""
+        return self.__class__(math.ceil(self.x), math.ceil(self.y))
+
     def distance(self, other: CoordOrTuple2, mode: Literal['chebyshev', 'euclid', 'taxi'] = 'taxi') -> float:
         """Returns the euclidean or taxicab distance from this coordinate to ``other`` based on ``mode``.
 
@@ -228,6 +232,10 @@ class Coord2:
     def format(self, s: str) -> str:
         """Returns ``s`` formatted with this coordinate's ``x`` and ``y`` values."""
         return s.format(x=self.x, y=self.y)
+
+    def floor(self) -> Self:
+        """Floors both values of this coordinate."""
+        return self.__class__(math.floor(self.x), math.floor(self.y))
 
     def in_bounds(self, rect: RectOrTuple, *, edge_ok: bool = True) -> bool:
         """Returns whether this coordinate is within a rectangle's bounds.
@@ -289,6 +297,13 @@ class Coord2:
         """Returns whether this coordinate sits on the edge of a rectangle."""
         return ((rect[0] <= self.x <= rect[2]) and (self.y in (rect[1], rect[3]))) \
             or ((rect[1] <= self.y <= rect[3]) and (self.x in (rect[0], rect[2])))
+
+    def round(self, ndigits: int | None = None) -> Self:
+        """Rounds this coordinate to a given number of places.
+
+        Both coordinate values will be converted to ``int`` if ``ndigits`` is ``None``.
+        """
+        return self.__class__(round(self.x, ndigits), round(self.y, ndigits))
 
     def snap_to_grid(self, grid: 'Grid2', snap_fn: Callable[[float], int] | None = None) -> Self:
         """Returns a new instance whose X and Y values have been aligned to ``grid``.

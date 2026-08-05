@@ -205,6 +205,11 @@ def test_coord2_as_tuple() -> None:
     assert Coord2(1.0, 2.0).as_tuple(int) == (1, 2)
     assert Coord2(1.0, 2.0).as_tuple(str) == ('1.0', '2.0')
 
+def test_coord2_ceil() -> None:
+    assert Coord2(1.4, 2.4).ceil() == Coord2(2, 3)
+    assert Coord2(1.5, 2.5).ceil() == Coord2(2, 3)
+    assert Coord2(1.6, 2.6).ceil() == Coord2(2, 3)
+
 @pytest.mark.parametrize(('a', 'b', 'chebyshev', 'euclid', 'taxi'),
     params := [
         ((0, 0), (0, 0), 0, 0, 0),
@@ -235,6 +240,11 @@ def test_coord2_distance(a: Tuple2[float], b: Tuple2[float], chebyshev: float, e
 def test_coord2_format() -> None:
     assert Coord2(1, 2).format('{x},{y}') == '1,2'
     assert Coord2(1.125, 2.5).format('{x:.2f},{y:.2f}') == '1.12,2.50'
+
+def test_coord2_floor() -> None:
+    assert Coord2(1.4, 2.4).floor() == Coord2(1, 2)
+    assert Coord2(1.5, 2.5).floor() == Coord2(1, 2)
+    assert Coord2(1.6, 2.6).floor() == Coord2(1, 2)
 
 def test_coord2_in_bounds() -> None:
     # If it works with Rect() and tuple() each once then we dont need to keep checking that
@@ -354,6 +364,17 @@ def test_coord2_on_edge() -> None:
     assert Coord2(0, 2).on_edge((0, 0, 2, 2))
     assert Coord2(1, 2).on_edge((0, 0, 2, 2))
     assert Coord2(2, 2).on_edge((0, 0, 2, 2))
+
+def test_coord2_round() -> None:
+    assert Coord2(0.5, 1.5).round() == Coord2(0, 2)
+    assert Coord2(1.4, 2.4).round() == Coord2(1, 2)
+    assert Coord2(1.5, 2.5).round() == Coord2(2, 2)
+    assert Coord2(1.6, 2.6).round() == Coord2(2, 3)
+
+    assert Coord2(0.54321, 1.54321).round(2) == Coord2(0.54, 1.54)
+    assert Coord2(1.44321, 2.44321).round(2) == Coord2(1.44, 2.44)
+    assert Coord2(1.54321, 2.54321).round(2) == Coord2(1.54, 2.54)
+    assert Coord2(1.64321, 2.64321).round(2) == Coord2(1.64, 2.64)
 
 def test_coord2_snap_to_grid() -> None:
     g = Grid2(-100, -100, 100, 100, step=(10, 10))
