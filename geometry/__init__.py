@@ -204,7 +204,11 @@ class Coord2:
     @overload
     def as_tuple[U](self, map_fn: Callable[[float], U]) -> tuple[U, U]: ...
     def as_tuple[U](self, map_fn: Callable[[float], U] | None = None) -> tuple[object, object]:
-        """Returns the coordinate as a tuple, optionally mapping the values."""
+        """Returns the coordinate as a tuple, optionally mapping the values.
+
+        It is recommended to use this instead of the tuple constructor (``tuple(self)``) since that requires iterating
+        over the coordinate, where this method constructs the tuple from direct attribute access and is much faster.
+        """
         if map_fn:
             return (map_fn(self.x), map_fn(self.y))
 
