@@ -80,8 +80,18 @@ class Coord2:
         yield from self.as_tuple()
 
     def __getitem__(self, idx: int) -> float:
-        """Returns the item at ``idx`` from a tuple of this coordinate's values."""
-        return self.as_tuple()[idx]
+        """Returns the item at ``idx`` as if from a tuple of this coordinate's values.
+
+        .. note::
+            A tuple of this coordinate is not actually constructed, a basic ``if`` block is used instead since it's
+            faster than making the tuple and accessing it; ``IndexError`` is still raised when out of range.
+        """
+        if idx == 0:
+            return self.x
+        elif idx == 1:
+            return self.y
+
+        raise IndexError(idx)
 
     def __hash__(self) -> int:
         """Returns the hash of a tuple of this coordinate's values."""
@@ -441,8 +451,22 @@ class Rect:
         yield from self.as_tuple()
 
     def __getitem__(self, idx: int) -> float:
-        """Returns the item at ``idx`` from :meth:`as_tuple`."""
-        return self.as_tuple()[idx]
+        """Returns the item at ``idx`` as if from a tuple of this rectangle's values.
+
+        .. note::
+            A tuple of this rectangle is not actually constructed, a basic ``if`` block is used instead since it's
+            faster than making the tuple and accessing it; ``IndexError`` is still raised when out of range.
+        """
+        if idx == 0:  # noqa: SIM116 ; doing the check like this is faster than tuple or dictionary access
+            return self.x1
+        elif idx == 1:
+            return self.y1
+        elif idx == 2:  # noqa: PLR2004
+            return self.x2
+        elif idx == 3:  # noqa: PLR2004
+            return self.y2
+
+        raise IndexError(idx)
 
     def __hash__(self) -> int:
         """Returns the hash of a :meth:`as_tuple`."""
