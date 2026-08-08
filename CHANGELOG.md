@@ -50,8 +50,8 @@ This project uses [towncrier](https://towncrier.readthedocs.io) to generate rele
 
 - Added method `Coord2._compare()` to handle all comparisons except `==`
 - Added method `Coord2.zip_with()`
-- Added method `Grid2.zip_with()
-- Added method `Rect.zip_with()
+- Added method `Grid2.zip_with()`
+- Added method `Rect.zip_with()`
 - Added support for `# testcheck: ignore` comments on class definitions
 - Added type alias `Tuple2`
 - Added type alias `Tuple4`
