@@ -7,9 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This project uses [towncrier](https://towncrier.readthedocs.io) to generate release notes.
 
+---
+
 <!-- towncrier release notes start -->
 
----
+## [0.6.0] - 2026-08-08
+
+### Added
+
+- Added function `assert_yields()` to `tests/__init__.py`
+- Added function `util.lerp()` (#16)
+- Added method `Coord2.ceil()` (#17)
+- Added method `Coord2.floor()` (#17)
+- Added method `Coord2.intersects()` (#18)
+- Added method `Coord2.lerp()` (#16)
+- Added method `Coord2.lerp_iter()` (#16)
+- Added method `Coord2.round()` (#17)
+- Method `Coord2.distance()` now supports chebyshev distance (#14)
+
+### Changed
+
+- Method `Coord2.snap_to_grid()` parameter `snap_fn` now defaults to `None`,
+  set to `round` in method body instead (#17)
+  - Done to avoid shadowing the built-in `round` with the addition of the
+    `Coord2.round()` method
+- `Coord2` and `Rect`'s `__getitem__` implementations now do if/elif checks
+  instead of constructing a tuple, improving its performance by a small amount
+  (#19)
+
+### Removed
+
+- Remove docstrings from `Coord2` methods `__ge__`, `__gt__`, `__le__`, and
+  `__lt__`
+
+### Fixed
+
+- Fixed an incorrect description in `Coord2.in_bounds()` docstring
 
 ## [0.5.0] - 2026-08-02
 
