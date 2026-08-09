@@ -579,6 +579,24 @@ class Rect:
 
         return (self.x1, self.y1, self.x2, self.y2)
 
+    def ceil(self) -> Self:
+        """Rounds up the coordinates of this rectangle."""
+        return self.__class__(
+            math.ceil(self.x1),
+            math.ceil(self.y1),
+            math.ceil(self.x2),
+            math.ceil(self.y2),
+        )
+
+    def floor(self) -> Self:
+        """Rounds down the coordinates of this rectangle."""
+        return self.__class__(
+            math.floor(self.x1),
+            math.floor(self.y1),
+            math.floor(self.x2),
+            math.floor(self.y2),
+        )
+
     def map(self, fn: Callable[[float], float]) -> Self:
         """Returns a new rectangle with ``fn`` applied to all coordinate values."""
         return self.__class__(fn(self.x1), fn(self.y1), fn(self.x2), fn(self.y2))
@@ -599,6 +617,18 @@ class Rect:
             self.y1 - (size_y if from_center else 0),
             self.x2 + size_x,
             self.y2 + size_y,
+        )
+
+    def round(self, ndigits: int | None = None) -> Self:
+        """Rounds the coordinates of this rectangle to a given number of places.
+
+        Values will be converted to ``int`` if ``ndigits`` is ``None``.
+        """
+        return self.__class__(
+            round(self.x1, ndigits),
+            round(self.y1, ndigits),
+            round(self.x2, ndigits),
+            round(self.y2, ndigits),
         )
 
     def translate_by(self, xy: CoordOrTuple2) -> Self:
