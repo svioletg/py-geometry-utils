@@ -21,7 +21,7 @@ release notes.
 - Added function `util.lerp()` (#16)
 - Added method `Coord2.ceil()` (#17)
 - Added method `Coord2.floor()` (#17)
-- Added method `Coord2.intersects()` (#18)
+- Added method `Coord2.intersects()` (#15)
 - Added method `Coord2.lerp()` (#16)
 - Added method `Coord2.lerp_iter()` (#16)
 - Added method `Coord2.round()` (#17)
