@@ -4,7 +4,7 @@ from copy import copy, deepcopy
 
 import pytest
 
-from geometry import Coord2, Grid2, Rect, Tuple2
+from geometry import Coord2, Grid2, Rect, Tuple2, Tuple4
 from geometry.util import take_n
 from tests import assert_all, assert_attrs, assert_yields
 
@@ -554,6 +554,16 @@ def test_rect_as_tuple() -> None:
     assert Rect(0.5, 0.5, 2.5, 2.5).as_tuple(int) == (0, 0, 2, 2)
     assert Rect(0, 0, 2, 2).as_tuple(str) == ('0', '0', '2', '2')
 
+def test_rect_ceil() -> None:
+    assert Rect(1.4, 2.4, 10.4, 15.4).ceil() == Rect(2, 3, 11, 16)
+    assert Rect(1.5, 2.5, 10.5, 15.5).ceil() == Rect(2, 3, 11, 16)
+    assert Rect(1.6, 2.6, 10.6, 15.6).ceil() == Rect(2, 3, 11, 16)
+
+def test_rect_floor() -> None:
+    assert Rect(1.4, 2.4, 10.4, 15.4).floor() == Rect(1, 2, 10, 15)
+    assert Rect(1.5, 2.5, 10.5, 15.5).floor() == Rect(1, 2, 10, 15)
+    assert Rect(1.6, 2.6, 10.6, 15.6).floor() == Rect(1, 2, 10, 15)
+
 def test_rect_map() -> None:
     assert Rect(0.5, 0.5, 2.5, 2.5).map(math.ceil) == Rect(1, 1, 3, 3)
     assert Rect(0.5, 0.5, 2.5, 2.5).map(math.floor) == Rect(0, 0, 2, 2)
@@ -561,6 +571,19 @@ def test_rect_map() -> None:
 def test_rect_resize() -> None:
     assert Rect(0, 0, 2, 2).resize((2, 2)) == Rect(0, 0, 4, 4)
     assert Rect(0, 0, 2, 2).resize((2, 2), from_center=True) == Rect(-1, -1, 3, 3)
+
+@pytest.mark.parametrize(('rect', 'places'),
+    [
+        ((1.4, 2.4, 10.4, 15.4), None),
+        ((1.5, 2.5, 10.5, 15.5), None),
+        ((1.6, 2.6, 10.6, 15.6), None),
+        ((1.44321, 2.44321, 10.44321, 15.44321), None),
+        ((1.54321, 2.54321, 10.54321, 15.54321), None),
+        ((1.64321, 2.64321, 10.64321, 15.64321), None),
+    ],
+)
+def test_rect_round(rect: Tuple4[float], places: int | None) -> None:
+    assert Rect(*rect).round(places) == Rect(*(round(n, places) for n in rect))
 
 def test_rect_translate_by() -> None:
     assert Rect(2, 2, 4, 4).translate_by((2, 2)) == Rect(4, 4, 6, 6)
