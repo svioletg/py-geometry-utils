@@ -13,6 +13,12 @@ release notes.
 
 <!-- towncrier release notes start -->
 
+## [0.7.0] - 2026-08-14
+
+### Added
+
+- Added methods `ceil()`, `floor()`, and `round()` to `Rect`
+
 ## [0.6.0] - 2026-08-08
 
 ### Added
