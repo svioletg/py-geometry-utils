@@ -8,7 +8,7 @@ from typing import Literal, Self, cast, overload, override
 
 from geometry.util import snap_num
 
-__version__ = '0.6.0'
+__version__ = '0.7.0'
 
 type Tuple2[T] = tuple[T, T]
 """A tuple of 2 values of the same type."""
