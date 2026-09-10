@@ -1,10 +1,15 @@
 """General utilities for ``geometry``."""
 from collections.abc import Callable, Iterable, Iterator
+from typing import Literal
 
 
 def ident[T](value: T) -> T:
     """Returns the passed value."""
     return value
+
+def sign(n: float) -> Literal[1, 0, -1]:
+    """Returns the sign of ``n``."""
+    return 0 if n == 0 else (1 if n > 0 else -1)
 
 def snap_num(num: float, mult: float, snap_fn: Callable[[float], int] = round) -> float:
     """Snaps ``num`` to the smallest or largest (depending on the outcome of ``snap_fn``) multiple of ``mult``.

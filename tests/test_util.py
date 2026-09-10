@@ -2,13 +2,19 @@ import math
 
 import pytest
 
-from geometry.util import ident, lerp, partition, snap_num, take_n
+from geometry.util import ident, lerp, partition, sign, snap_num, take_n
+from tests import assert_all
 
 
 def test_ident() -> None:
     assert ident(0) == 0
     inst = [1, 2, 3]
     assert ident(inst) is inst
+
+def test_sign() -> None:
+    assert_all(lambda n: sign(n) == -1, range(-11, -1))
+    assert sign(0) == 0
+    assert_all(lambda n: sign(n) == 1, range(1, 11))
 
 def test_snap_num() -> None:
     assert snap_num(6, 10, round) == 10  # noqa: PLR2004
