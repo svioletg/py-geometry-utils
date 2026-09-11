@@ -200,6 +200,11 @@ def test_coord2_mag_copy() -> None:
     assert copied is not inst
     assert copied == inst
 
+    assert not Coord2(1, 2).copy().mutable
+    assert Coord2(1, 2, mut=True).copy().mutable
+    assert not Coord2(1, 2, mut=True).copy(mut=False).mutable
+    assert Coord2(1, 2, mut=False).copy(mut=True).mutable
+
 def test_coord2_as_tuple() -> None:
     assert Coord2(1.0, 2.0).as_tuple() == (1.0, 2.0)
     assert Coord2(1.0, 2.0).as_tuple(int) == (1, 2)
@@ -209,6 +214,10 @@ def test_coord2_ceil() -> None:
     assert Coord2(1.4, 2.4).ceil() == Coord2(2, 3)
     assert Coord2(1.5, 2.5).ceil() == Coord2(2, 3)
     assert Coord2(1.6, 2.6).ceil() == Coord2(2, 3)
+
+@pytest.mark.parametrize('mut', [True, False])
+def test_coord2_copy(mut: bool) -> None:
+    assert Coord2(1, 2, mut=mut).copy(mut=mut) == Coord2(1, 2, mut=mut).__copy__(mut=mut)
 
 @pytest.mark.parametrize(('a', 'b', 'chebyshev', 'euclid', 'taxi'),
     params := [
@@ -505,6 +514,11 @@ def test_rect_mag_copy() -> None:
     assert copied is not inst
     assert copied == inst
 
+    assert not Rect(1, 2, 3, 4).copy().mutable
+    assert Rect(1, 2, 3, 4, mut=True).copy().mutable
+    assert not Rect(1, 2, 3, 4, mut=True).copy(mut=False).mutable
+    assert Rect(1, 2, 3, 4, mut=False).copy(mut=True).mutable
+
 def test_rect_area() -> None:
     assert Rect(0, 0, 2, 2).area == 4  # noqa: PLR2004
 
@@ -516,6 +530,10 @@ def test_rect_bottom_right() -> None:
 
 def test_rect_center() -> None:
     assert Rect(0, 0, 2, 2).center == Coord2(1, 1)
+
+@pytest.mark.parametrize('mut', [True, False])
+def test_rect_copy(mut: bool) -> None:
+    assert Rect(1, 2, 3, 4, mut=mut).copy(mut=mut) == Rect(1, 2, 3, 4, mut=mut).__copy__(mut=mut)
 
 def test_rect_corners() -> None:
     assert Rect(0, 0, 2, 2).corners == (
@@ -671,6 +689,11 @@ def test_grid2_mag_copy() -> None:
     assert copied.origin == must_inst.origin
     assert copied.origin is must_inst.origin
 
+    assert not Grid2(1, 2, 3, 4).copy().mutable
+    assert Grid2(1, 2, 3, 4, mut=True).copy().mutable
+    assert not Grid2(1, 2, 3, 4, mut=True).copy(mut=False).mutable
+    assert Grid2(1, 2, 3, 4, mut=False).copy(mut=True).mutable
+
 def test_grid2_mag_deepcopy() -> None:
     inst = Grid2(0, 1, 2, 3, step=(4, 5), origin=(1, 2))
     copied = deepcopy(inst)
@@ -736,6 +759,10 @@ def test_grid2_ceil() -> None:
     assert g.ceil().origin == g.origin
     assert g.ceil(step=(3, 3)).step == (3, 3)
     assert g.ceil(origin=(3, 3)).origin == (3, 3)
+
+@pytest.mark.parametrize('mut', [True, False])
+def test_grid2_copy(mut: bool) -> None:
+    assert Grid2(1, 2, 3, 4, mut=mut).copy(mut=mut) == Grid2(1, 2, 3, 4, mut=mut).__copy__(mut=mut)
 
 def test_grid2_floor() -> None:
     assert Grid2(1.4, 2.4, 10.4, 15.4).floor() == Grid2(1, 2, 10, 15)

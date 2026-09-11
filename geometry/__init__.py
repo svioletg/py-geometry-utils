@@ -97,9 +97,13 @@ class Coord2:
         """Returns the hash of a tuple of this coordinate's values."""
         return hash(self.as_tuple())
 
-    def __copy__(self) -> Self:
-        """Returns a new instance with the same values as this instance."""
-        return self.__class__(self.x, self.y, mut=self.mutable)
+    def __copy__(self, *, mut: bool | None = None) -> Self:
+        """Returns a new instance with the same values as this instance, optionally changing its mutability.
+
+        :param mut: Sets the mutability of the copied instance. If ``None``, the current value for the instance being
+            copied is used.
+        """
+        return self.__class__(self.x, self.y, mut=mut if mut is not None else self.mutable)
 
     def __eq__(self, other: object) -> bool:
         """Compares the X and Y values of two coordinates, returns ``False`` for other objects."""
@@ -227,6 +231,13 @@ class Coord2:
     def ceil(self) -> Self:
         """Rounds up both values of this coordinate."""
         return self.__class__(math.ceil(self.x), math.ceil(self.y))
+
+    def copy(self, *, mut: bool | None = None) -> Self:
+        """Returns a copy of this instance, optionally changing its mutability.
+
+        See :meth:`__copy__`.
+        """
+        return self.__copy__(mut=mut)
 
     def distance(self, other: CoordOrTuple2, mode: Literal['chebyshev', 'euclid', 'taxi'] = 'taxi') -> float:
         """Returns the distance from this coordinate to ``other`` based on ``mode``.
@@ -472,9 +483,13 @@ class Rect:
         """Returns the hash of a :meth:`as_tuple`."""
         return hash(self.as_tuple())
 
-    def __copy__(self) -> Self:
-        """Returns a new instance with the same values as this instance."""
-        return self.__class__(self.x1, self.y1, self.x2, self.y2, mut=self.mutable)
+    def __copy__(self, *, mut: bool | None = None) -> Self:
+        """Returns a new instance with the same values as this instance, optionally changing its mutability.
+
+        :param mut: Sets the mutability of the copied instance. If ``None``, the current value for the instance being
+            copied is used.
+        """
+        return self.__class__(self.x1, self.y1, self.x2, self.y2, mut=mut if mut is not None else self.mutable)
 
     def __eq__(self, value: object) -> bool:
         """Compares coordinate values if ``value`` is a tuple or ``Rect`` object, otherwise returns ``False``."""
@@ -587,6 +602,13 @@ class Rect:
             math.ceil(self.x2),
             math.ceil(self.y2),
         )
+
+    def copy(self, *, mut: bool | None = None) -> Self:
+        """Returns a copy of this instance, optionally changing its mutability.
+
+        See :meth:`__copy__`.
+        """
+        return self.__copy__(mut=mut)
 
     def floor(self) -> Self:
         """Rounds down the coordinates of this rectangle."""
@@ -732,11 +754,14 @@ class Grid2(Rect):
         """Returns this grid in the format ``(x1, y1, x2, y2)[step=str(step), origin=str(origin)]``."""
         return f'{self.as_tuple()}[step={self.step}, origin={self.origin}]'
 
-    def __copy__(self) -> Self:
-        """Returns a new instance with the same values as this instance.
+    def __copy__(self, *, mut: bool | None = None) -> Self:
+        """Returns a new instance with the same values as this instance, optionally changing its mutability.
 
         The resulting copy's ``step`` and ``origin`` are references to this instance's respective objects. Use
         ``Grid2``'s :meth:`__deepcopy__` implementation to ensure these values are copies as well.
+
+        :param mut: Sets the mutability of the copied instance. If ``None``, the current value for the instance being
+            copied is used.
         """
         return self.__class__(
             self.x1,
@@ -745,7 +770,7 @@ class Grid2(Rect):
             self.y2,
             step=self.step,
             origin=self.origin,
-            mut=self.mutable,
+            mut=mut if mut is not None else self.mutable,
         )
 
     def __deepcopy__(self, memo: dict) -> Self:
@@ -810,6 +835,13 @@ class Grid2(Rect):
             step=step or self.step,
             origin=origin or self.origin,
         )
+
+    def copy(self, *, mut: bool | None = None) -> Self:
+        """Returns a copy of this instance, optionally changing its mutability.
+
+        See :meth:`__copy__`.
+        """
+        return self.__copy__(mut=mut)
 
     def floor(self,
             *,

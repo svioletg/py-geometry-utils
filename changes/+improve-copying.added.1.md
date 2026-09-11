@@ -1,0 +1,1 @@
+Added method `Rect.copy()`
