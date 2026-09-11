@@ -726,6 +726,92 @@ def test_grid2_from_size() -> None:
     inst = Grid2.from_size((100, 100), center=(0, 0), origin=(-50, -50))
     assert inst.origin == Coord2(-50, -50)
 
+def test_grid2_ceil() -> None:
+    assert Grid2(1.4, 2.4, 10.4, 15.4).ceil() == Grid2(2, 3, 11, 16)
+    assert Grid2(1.5, 2.5, 10.5, 15.5).ceil() == Grid2(2, 3, 11, 16)
+    assert Grid2(1.6, 2.6, 10.6, 15.6).ceil() == Grid2(2, 3, 11, 16)
+
+    g = Grid2(0, 0, 1, 1, step=(2, 2), origin=(1, 1))
+    assert g.ceil().step == g.step
+    assert g.ceil().origin == g.origin
+    assert g.ceil(step=(3, 3)).step == (3, 3)
+    assert g.ceil(origin=(3, 3)).origin == (3, 3)
+
+def test_grid2_floor() -> None:
+    assert Grid2(1.4, 2.4, 10.4, 15.4).floor() == Grid2(1, 2, 10, 15)
+    assert Grid2(1.5, 2.5, 10.5, 15.5).floor() == Grid2(1, 2, 10, 15)
+    assert Grid2(1.6, 2.6, 10.6, 15.6).floor() == Grid2(1, 2, 10, 15)
+
+    g = Grid2(0, 0, 1, 1, step=(2, 2), origin=(1, 1))
+    assert g.floor().step == g.step
+    assert g.floor().origin == g.origin
+    assert g.floor(step=(3, 3)).step == (3, 3)
+    assert g.floor(origin=(3, 3)).origin == (3, 3)
+
+def test_grid2_map() -> None:
+    assert Grid2(0.5, 0.5, 2.5, 2.5).map(math.ceil) == Grid2(1, 1, 3, 3)
+    assert Grid2(0.5, 0.5, 2.5, 2.5).map(math.floor) == Grid2(0, 0, 2, 2)
+
+    g = Grid2(0, 0, 1, 1, step=(2, 2), origin=(1, 1))
+    assert g.map(math.floor).step == g.step
+    assert g.map(math.floor).origin == g.origin
+    assert g.map(math.floor, step=(3, 3)).step == (3, 3)
+    assert g.map(math.floor, origin=(3, 3)).origin == (3, 3)
+
+def test_grid2_resize() -> None:
+    assert Grid2(0, 0, 2, 2).resize((2, 2)) == Grid2(0, 0, 4, 4)
+    assert Grid2(0, 0, 2, 2).resize((2, 2), from_center=True) == Grid2(-1, -1, 3, 3)
+
+    g = Grid2(0, 0, 1, 1, step=(2, 2), origin=(1, 1))
+    assert g.resize((2, 2)).step == g.step
+    assert g.resize((2, 2)).origin == g.origin
+    assert g.resize((2, 2), step=(3, 3)).step == (3, 3)
+    assert g.resize((2, 2), origin=(3, 3)).origin == (3, 3)
+
+@pytest.mark.parametrize(('grid', 'places'),
+    [
+        ((1.4, 2.4, 10.4, 15.4), None),
+        ((1.5, 2.5, 10.5, 15.5), None),
+        ((1.6, 2.6, 10.6, 15.6), None),
+        ((1.44321, 2.44321, 10.44321, 15.44321), None),
+        ((1.54321, 2.54321, 10.54321, 15.54321), None),
+        ((1.64321, 2.64321, 10.64321, 15.64321), None),
+    ],
+)
+def test_grid2_round(grid: Tuple4[float], places: int | None) -> None:
+    assert Grid2(*grid).round(places) == Grid2(*(round(n, places) for n in grid))
+
+def test_grid2_round_extra_params() -> None:
+    g = Grid2(0, 0, 1, 1, step=(2, 2), origin=(1, 1))
+    assert g.round().step == g.step
+    assert g.round().origin == g.origin
+    assert g.round(step=(3, 3)).step == (3, 3)
+    assert g.round(origin=(3, 3)).origin == (3, 3)
+
+def test_grid2_translate_by() -> None:
+    assert Grid2(2, 2, 4, 4).translate_by((2, 2)) == Grid2(4, 4, 6, 6)
+    assert Grid2(2, 2, 4, 4).translate_by((2, 2)).size == Grid2(2, 2, 4, 4).size
+    assert Grid2(2, 2, 4, 4).translate_by((1, 2)) == Grid2(3, 4, 5, 6)
+    assert Grid2(2, 2, 4, 4).translate_by((2, 2)).size == Grid2(2, 2, 4, 4).size
+
+    g = Grid2(0, 0, 1, 1, step=(2, 2), origin=(1, 1))
+    assert g.translate_by((2, 2)).step == g.step
+    assert g.translate_by((2, 2)).origin == g.origin
+    assert g.translate_by((2, 2), step=(3, 3)).step == (3, 3)
+    assert g.translate_by((2, 2), origin=(3, 3)).origin == (3, 3)
+
+def test_grid2_translate_to() -> None:
+    assert Grid2(0, 0, 2, 2).translate_to((2, 2)) == Grid2(2, 2, 4, 4)
+    assert Grid2(0, 0, 2, 2).translate_to((2, 2)).size == Grid2(0, 0, 2, 2).size
+    assert Grid2(0, 0, 2, 2).translate_to((1, 2)) == Grid2(1, 2, 3, 4)
+    assert Grid2(0, 0, 2, 2).translate_to((2, 2)).size == Grid2(0, 0, 2, 2).size
+
+    g = Grid2(0, 0, 1, 1, step=(2, 2), origin=(1, 1))
+    assert g.translate_to((2, 2)).step == g.step
+    assert g.translate_to((2, 2)).origin == g.origin
+    assert g.translate_to((2, 2), step=(3, 3)).step == (3, 3)
+    assert g.translate_to((2, 2), origin=(3, 3)).origin == (3, 3)
+
 def test_grid2_steps_x() -> None:
     grid = Grid2(0, 1, 2, 3, origin=(0, 1))
     steps = list(grid.steps_x())

@@ -792,6 +792,147 @@ class Grid2(Rect):
             origin=origin,
         )
 
+    def ceil(self,
+            *,
+            step: CoordOrTuple2 | None = None,
+            origin: CoordOrTuple2 | None = None,
+        ) -> Self:
+        """Rounds up the coordinates of this grid.
+
+        New ``step`` and ``origin`` values can be optionally specified, otherwise the values for this instance are
+        used.
+        """
+        return self.__class__(
+            math.ceil(self.x1),
+            math.ceil(self.y1),
+            math.ceil(self.x2),
+            math.ceil(self.y2),
+            step=step or self.step,
+            origin=origin or self.origin,
+        )
+
+    def floor(self,
+            *,
+            step: CoordOrTuple2 | None = None,
+            origin: CoordOrTuple2 | None = None,
+        ) -> Self:
+        """Rounds down the coordinates of this grid.
+
+        New ``step`` and ``origin`` values can be optionally specified, otherwise the values for this instance are
+        used.
+        """
+        return self.__class__(
+            math.floor(self.x1),
+            math.floor(self.y1),
+            math.floor(self.x2),
+            math.floor(self.y2),
+            step=step or self.step,
+            origin=origin or self.origin,
+        )
+
+    def map(self,
+            fn: Callable[[float], float],
+            *,
+            step: CoordOrTuple2 | None = None,
+            origin: CoordOrTuple2 | None = None,
+        ) -> Self:
+        """Returns a new rectangle with ``fn`` applied to all coordinate values.
+
+        New ``step`` and ``origin`` values can be optionally specified, otherwise the values for this instance are
+        used.
+        """
+        return self.__class__(
+            fn(self.x1),
+            fn(self.y1),
+            fn(self.x2),
+            fn(self.y2),
+            step=step or self.step,
+            origin=origin or self.origin,
+        )
+
+    def resize(self,
+            xy: CoordOrTuple2,
+            *,
+            step: CoordOrTuple2 | None = None,
+            origin: CoordOrTuple2 | None = None,
+            from_center: bool = False,
+        ) -> Self:
+        """Returns a new grid of this instance's size added to by ``xy``.
+
+        By default, the grid is resized from the top-left corner, keeping its coordinate intact and only adding to the
+        bottom-right coordinate. If ``from_center`` is ``True``, it will be resized outward in all directions from the
+        center coordinate.
+
+        New ``step`` and ``origin`` values can be optionally specified, otherwise the values for this instance are used.
+        """
+        size_x, size_y = xy
+        if from_center:
+            size_x, size_y = size_x / 2, size_y / 2
+
+        return self.__class__(
+            self.x1 - (size_x if from_center else 0),
+            self.y1 - (size_y if from_center else 0),
+            self.x2 + size_x,
+            self.y2 + size_y,
+            step=step or self.step,
+            origin=origin or self.origin,
+        )
+
+    def round(self,
+            ndigits: int | None = None,
+            *,
+            step: CoordOrTuple2 | None = None,
+            origin: CoordOrTuple2 | None = None,
+        ) -> Self:
+        """Rounds the coordinates of this rectangle to a given number of places.
+
+        Values will be converted to ``int`` if ``ndigits`` is ``None``.
+
+        New ``step`` and ``origin`` values can be optionally specified, otherwise the values for this instance are used.
+        """
+        return self.__class__(
+            round(self.x1, ndigits),
+            round(self.y1, ndigits),
+            round(self.x2, ndigits),
+            round(self.y2, ndigits),
+            step=step or self.step,
+            origin=origin or self.origin,
+        )
+
+    def translate_by(self,
+            xy: CoordOrTuple2,
+            *,
+            step: CoordOrTuple2 | None = None,
+            origin: CoordOrTuple2 | None = None,
+        ) -> Self:
+        """Returns a new rectangle with this instance's coordinates shifted by ``xy``.
+
+        New ``step`` and ``origin`` values can be optionally specified, otherwise the values for this instance are used.
+        """
+        tr_x, tr_y = xy
+
+        return self.__class__(
+            self.x1 + tr_x,
+            self.y1 + tr_y,
+            self.x2 + tr_x,
+            self.y2 + tr_y,
+            step=step or self.step,
+            origin=origin or self.origin,
+        )
+
+    def translate_to(self,
+            xy: CoordOrTuple2,
+            *,
+            step: CoordOrTuple2 | None = None,
+            origin: CoordOrTuple2 | None = None,
+        ) -> Self:
+        """Returns a new rectangle with this instance's coordinates shifted such that its top left coordinate
+        equals ``xy``.
+
+        New ``step`` and ``origin`` values can be optionally specified, otherwise the values for this instance are used.
+        """  # noqa: D205
+        return self.translate_by(Coord2(*xy) - self.top_left, step=step, origin=origin)
+
     def steps_x(self, *, step: float | None = None, origin: float | None = None, inf: bool = False) -> Generator[float]:
         """Yields X coordinates starting at ``origin`` and adding ``step`` while in range of the grid.
 
