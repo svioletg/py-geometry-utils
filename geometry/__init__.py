@@ -817,6 +817,7 @@ class Grid2(Rect):
             origin=origin,
         )
 
+    @override
     def ceil(self,
             *,
             step: CoordOrTuple2 | None = None,
@@ -836,6 +837,7 @@ class Grid2(Rect):
             origin=origin or self.origin,
         )
 
+    @override
     def copy(self, *, mut: bool | None = None) -> Self:
         """Returns a copy of this instance, optionally changing its mutability.
 
@@ -843,6 +845,7 @@ class Grid2(Rect):
         """
         return self.__copy__(mut=mut)
 
+    @override
     def floor(self,
             *,
             step: CoordOrTuple2 | None = None,
@@ -862,6 +865,7 @@ class Grid2(Rect):
             origin=origin or self.origin,
         )
 
+    @override
     def map(self,
             fn: Callable[[float], float],
             *,
@@ -882,6 +886,7 @@ class Grid2(Rect):
             origin=origin or self.origin,
         )
 
+    @override
     def resize(self,
             xy: CoordOrTuple2,
             *,
@@ -910,6 +915,7 @@ class Grid2(Rect):
             origin=origin or self.origin,
         )
 
+    @override
     def round(self,
             ndigits: int | None = None,
             *,
@@ -931,6 +937,7 @@ class Grid2(Rect):
             origin=origin or self.origin,
         )
 
+    @override
     def translate_by(self,
             xy: CoordOrTuple2,
             *,
@@ -957,6 +964,7 @@ class Grid2(Rect):
             origin=origin or self.origin,
         )
 
+    @override
     def translate_to(self,
             xy: CoordOrTuple2,
             *,
