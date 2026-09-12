@@ -1,7 +1,7 @@
 """Utilities for working with coordinates and rectangles/grids."""
 import math
 import operator
-from collections.abc import Callable, Generator
+from collections.abc import Callable, Generator, Iterable
 from copy import copy
 from itertools import product
 from typing import Literal, Self, cast, overload, override
@@ -567,6 +567,26 @@ class Rect:
         return self.x2 - self.x1
 
     @classmethod
+    def from_points(cls, points: Iterable[CoordOrTuple2], *, mut: bool = False) -> Self:
+        """Returns a new rectangle sized by the minimum and maximum values of a sequence of coordinates."""
+        x1: float = math.inf
+        y1: float = math.inf
+        x2: float = -math.inf
+        y2: float = -math.inf
+
+        for (x, y) in points:
+            if x < x1:
+                x1 = x
+            elif x > x2:
+                x2 = x
+            if y < y1:
+                y1 = y
+            elif y > y2:
+                y2 = y
+
+        return cls(x1, y1, x2, y2, mut=mut)
+
+    @classmethod
     def from_size(cls, size: CoordOrTuple2, center: CoordOrTuple2 | None = None) -> Self:
         """Returns a new rectangle of the given size.
 
@@ -788,6 +808,17 @@ class Grid2(Rect):
             origin=copy(self.origin),
             mut=self.mutable,
         )
+
+    @classmethod
+    @override
+    def from_points(cls,
+            points: Iterable[CoordOrTuple2],
+            *,
+            step: CoordOrTuple2 = (1, 1),
+            origin: CoordOrTuple2 | None = None,
+            mut: bool = False,
+        ) -> Self:
+        return cls(*super().from_points(points), step=step, origin=origin, mut=mut)
 
     @classmethod
     @override

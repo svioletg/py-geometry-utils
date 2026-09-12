@@ -561,6 +561,15 @@ def test_rect_top_right() -> None:
 def test_rect_width() -> None:
     assert Rect(0, 0, 2, 2).height == 2  # noqa: PLR2004
 
+def test_rect_from_points() -> None:
+    xs = [Coord2(-10, -2), (-2, -10), (10, 2), (2, 10)]
+    rect = Rect.from_points(xs)
+    assert rect.top_left == (-10, -10)
+    assert rect.bottom_right == (10, 10)
+
+    assert Rect.from_points(xs).mutable is Rect.from_points(xs, mut=False).mutable is False
+    assert Rect.from_points(xs, mut=True).mutable is True
+
 def test_rect_from_size() -> None:
     assert Rect.from_size((100, 100), center=None) == Rect(0, 0, 100, 100)
     assert Rect.from_size((50, 100), center=None) == Rect(0, 0, 50, 100)
@@ -734,6 +743,20 @@ def test_grid2_origin() -> None:
     grid.origin = (2, 2)
     assert isinstance(grid.origin, Coord2)
     assert grid.origin == Coord2(2, 2)
+
+def test_grid2_from_points() -> None:
+    xs = [Coord2(-10, -2), (-2, -10), (10, 2), (2, 10)]
+    grid = Grid2.from_points(xs)
+    assert grid.top_left == (-10, -10)
+    assert grid.bottom_right == (10, 10)
+    assert grid.step == (1, 1)
+    assert grid.origin == (0, 0)
+
+    assert Grid2.from_points(xs).mutable is Grid2.from_points(xs, mut=False).mutable is False
+    assert Grid2.from_points(xs, mut=True).mutable is True
+
+    assert Grid2.from_points(xs, step=(2, 2)).step == (2, 2)
+    assert Grid2.from_points(xs, origin=(2, 2)).origin == (2, 2)
 
 def test_grid2_from_size() -> None:
     inst = Grid2.from_size((100, 100))
