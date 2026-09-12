@@ -823,7 +823,8 @@ def test_grid2_translate_by() -> None:
 
     g = Grid2(0, 0, 1, 1, step=(2, 2), origin=(1, 1))
     assert g.translate_by((2, 2)).step == g.step
-    assert g.translate_by((2, 2)).origin == g.origin
+    assert g.translate_by((2, 2)).origin == g.translate_by((2, 2), origin='auto').origin == (3, 3)
+    assert g.translate_by((2, 2), origin=None).origin == g.origin
     assert g.translate_by((2, 2), step=(3, 3)).step == (3, 3)
     assert g.translate_by((2, 2), origin=(3, 3)).origin == (3, 3)
 
@@ -835,7 +836,8 @@ def test_grid2_translate_to() -> None:
 
     g = Grid2(0, 0, 1, 1, step=(2, 2), origin=(1, 1))
     assert g.translate_to((2, 2)).step == g.step
-    assert g.translate_to((2, 2)).origin == g.origin
+    assert g.translate_to((2, 2)).origin == g.translate_to((2, 2), origin='auto').origin == (3, 3)
+    assert g.translate_to((2, 2), origin=None).origin == g.origin
     assert g.translate_to((2, 2), step=(3, 3)).step == (3, 3)
     assert g.translate_to((2, 2), origin=(3, 3)).origin == (3, 3)
 

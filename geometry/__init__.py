@@ -935,13 +935,18 @@ class Grid2(Rect):
             xy: CoordOrTuple2,
             *,
             step: CoordOrTuple2 | None = None,
-            origin: CoordOrTuple2 | None = None,
+            origin: CoordOrTuple2 | Literal['auto'] | None = 'auto',
         ) -> Self:
         """Returns a new rectangle with this instance's coordinates shifted by ``xy``.
 
         New ``step`` and ``origin`` values can be optionally specified, otherwise the values for this instance are used.
+        ``origin`` may also be ``'auto'`` (default), which will shift the origin point by ``xy``. Setting it to ``None``
+        keeps this instance's origin value unchanged.
         """
         tr_x, tr_y = xy
+
+        if origin == 'auto':
+            origin = self.origin + xy
 
         return self.__class__(
             self.x1 + tr_x,
@@ -956,12 +961,14 @@ class Grid2(Rect):
             xy: CoordOrTuple2,
             *,
             step: CoordOrTuple2 | None = None,
-            origin: CoordOrTuple2 | None = None,
+            origin: CoordOrTuple2 | Literal['auto'] | None = 'auto',
         ) -> Self:
         """Returns a new rectangle with this instance's coordinates shifted such that its top left coordinate
         equals ``xy``.
 
         New ``step`` and ``origin`` values can be optionally specified, otherwise the values for this instance are used.
+        ``origin`` may also be ``'auto'`` (default), which will shift the origin point by ``xy``. Setting it to ``None``
+        keeps this instance's origin value unchanged.
         """  # noqa: D205
         return self.translate_by(Coord2(*xy) - self.top_left, step=step, origin=origin)
 
