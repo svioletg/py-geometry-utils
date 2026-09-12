@@ -639,9 +639,16 @@ class Rect:
             math.floor(self.y2),
         )
 
-    def map(self, fn: Callable[[float], float]) -> Self:
-        """Returns a new rectangle with ``fn`` applied to all coordinate values."""
-        return self.__class__(fn(self.x1), fn(self.y1), fn(self.x2), fn(self.y2))
+    def map(self, fn: Callable[[float], float] | tuple[Callable[[float], float], Callable[[float], float]]) -> Self:
+        """Returns a new rectangle with ``fn`` applied to all coordinate values.
+
+        If ``fn`` is a tuple of two functions, the first is applied to the top-left coordinates (:data:`x1` and
+        :data:`y1`) and the second is applied to the bottom-right (:data:`x2` and :data:`y2`). Otherwise, the function
+        is applied to all four values.
+        """
+        xy1_fn, xy2_fn = fn if isinstance(fn, tuple) else (fn, fn)
+
+        return self.__class__(xy1_fn(self.x1), xy1_fn(self.y1), xy2_fn(self.x2), xy2_fn(self.y2))
 
     def resize(self, xy: CoordOrTuple2, *, from_center: bool = False) -> Self:
         """Returns a new rectangle of this instance's size added to by ``xy``.
@@ -898,21 +905,22 @@ class Grid2(Rect):
 
     @override
     def map(self,
-            fn: Callable[[float], float],
+            fn: Callable[[float], float] | tuple[Callable[[float], float], Callable[[float], float]],
             *,
             step: CoordOrTuple2 | None = None,
             origin: CoordOrTuple2 | None = None,
         ) -> Self:
         """Returns a new rectangle with ``fn`` applied to all coordinate values.
 
+        If ``fn`` is a tuple of two functions, the first is applied to the top-left coordinates (:data:`x1` and
+        :data:`y1`) and the second is applied to the bottom-right (:data:`x2` and :data:`y2`). Otherwise, the function
+        is applied to all four values.
+
         New ``step`` and ``origin`` values can be optionally specified, otherwise the values for this instance are
         used.
         """
         return self.__class__(
-            fn(self.x1),
-            fn(self.y1),
-            fn(self.x2),
-            fn(self.y2),
+            *(super().map(fn)),
             step=step or self.step,
             origin=origin or self.origin,
         )

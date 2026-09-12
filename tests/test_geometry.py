@@ -594,6 +594,7 @@ def test_rect_floor() -> None:
 def test_rect_map() -> None:
     assert Rect(0.5, 0.5, 2.5, 2.5).map(math.ceil) == Rect(1, 1, 3, 3)
     assert Rect(0.5, 0.5, 2.5, 2.5).map(math.floor) == Rect(0, 0, 2, 2)
+    assert Rect(0.5, 0.5, 2.5, 2.5).map((math.floor, math.ceil)) == Rect(0, 0, 3, 3)
 
 def test_rect_resize() -> None:
     assert Rect(0, 0, 2, 2).resize((2, 2)) == Rect(0, 0, 4, 4)
@@ -801,6 +802,7 @@ def test_grid2_floor() -> None:
 def test_grid2_map() -> None:
     assert Grid2(0.5, 0.5, 2.5, 2.5).map(math.ceil) == Grid2(1, 1, 3, 3)
     assert Grid2(0.5, 0.5, 2.5, 2.5).map(math.floor) == Grid2(0, 0, 2, 2)
+    assert Grid2(0.5, 0.5, 2.5, 2.5).map((math.floor, math.ceil)) == Grid2(0, 0, 3, 3)
 
     g = Grid2(0, 0, 1, 1, step=(2, 2), origin=(1, 1))
     assert g.map(math.floor).step == g.step
