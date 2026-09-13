@@ -213,6 +213,20 @@ class Coord2:
         """
         return self.zip_with(operator.pow, other)
 
+    def __neg__(self) -> Self: # testcheck: ignore
+        """Returns a new coordinate with the inverted values of this instance.
+
+        >>> assert -Coord2(-10, 10) == Coord2(10, -10)
+        """
+        return self.map(operator.neg)
+
+    def __abs__(self) -> Self: # testcheck: ignore
+        """Returns a new coordinate with ``abs()`` applied to both values.
+
+        >>> assert abs(Coord2(-10, -20)) == Coord2(10, 20)
+        """
+        return self.map(operator.abs)
+
     @overload
     def as_tuple(self, map_fn: None = None) -> tuple[float, float]: ...
     @overload
