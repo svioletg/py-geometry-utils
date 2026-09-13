@@ -193,6 +193,20 @@ def test_coord2_mag_pow() -> None:
     with pytest.raises(TypeError, match=r"(unsupported operand|must be 'int' or 'float')"):
         Coord2(1, 2) ** '2'  # ty:ignore[unsupported-operator]
 
+def test_coord2_mag_round() -> None:
+    c = Coord2(1, 2)
+    assert c.round == c.__round__
+
+    assert round(Coord2(0.5, 1.5)) == Coord2(0, 2)
+    assert round(Coord2(1.4, 2.4)) == Coord2(1, 2)
+    assert round(Coord2(1.5, 2.5)) == Coord2(2, 2)
+    assert round(Coord2(1.6, 2.6)) == Coord2(2, 3)
+
+    assert round(Coord2(0.54321, 1.54321), 2) == Coord2(0.54, 1.54)
+    assert round(Coord2(1.44321, 2.44321), 2) == Coord2(1.44, 2.44)
+    assert round(Coord2(1.54321, 2.54321), 2) == Coord2(1.54, 2.54)
+    assert round(Coord2(1.64321, 2.64321), 2) == Coord2(1.64, 2.64)
+
 def test_coord2_mag_copy() -> None:
     inst = Coord2(1, 2)
     copied = copy(inst)
@@ -404,17 +418,6 @@ def test_coord2_on_edge() -> None:
     assert Coord2(0, 2).on_edge((0, 0, 2, 2))
     assert Coord2(1, 2).on_edge((0, 0, 2, 2))
     assert Coord2(2, 2).on_edge((0, 0, 2, 2))
-
-def test_coord2_round() -> None:
-    assert Coord2(0.5, 1.5).round() == Coord2(0, 2)
-    assert Coord2(1.4, 2.4).round() == Coord2(1, 2)
-    assert Coord2(1.5, 2.5).round() == Coord2(2, 2)
-    assert Coord2(1.6, 2.6).round() == Coord2(2, 3)
-
-    assert Coord2(0.54321, 1.54321).round(2) == Coord2(0.54, 1.54)
-    assert Coord2(1.44321, 2.44321).round(2) == Coord2(1.44, 2.44)
-    assert Coord2(1.54321, 2.54321).round(2) == Coord2(1.54, 2.54)
-    assert Coord2(1.64321, 2.64321).round(2) == Coord2(1.64, 2.64)
 
 def test_coord2_snap_to_grid() -> None:
     g = Grid2(-100, -100, 100, 100, step=(10, 10))

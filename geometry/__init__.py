@@ -41,6 +41,9 @@ class Coord2:
         self._x = x
         self._y = y
 
+        # Magic method aliases
+        self.round = self.__round__
+
     @property
     def x(self) -> float:  # testcheck: ignore
         """X coordinate."""
@@ -227,6 +230,10 @@ class Coord2:
         """
         return self.map(operator.abs)
 
+    def __round__(self, ndigits: int | None = None) -> Self:
+        """Rounds both values of this coordinate with per the built-in :func:`round` function."""
+        return self.__class__(round(self.x, ndigits), round(self.y, ndigits))
+
     @overload
     def as_tuple(self, map_fn: None = None) -> tuple[float, float]: ...
     @overload
@@ -359,13 +366,6 @@ class Coord2:
         """Returns whether this coordinate sits on the edge of a rectangle."""
         return ((rect[0] <= self.x <= rect[2]) and (self.y in (rect[1], rect[3]))) \
             or ((rect[1] <= self.y <= rect[3]) and (self.x in (rect[0], rect[2])))
-
-    def round(self, ndigits: int | None = None) -> Self:
-        """Rounds this coordinate to a given number of places.
-
-        Both coordinate values will be converted to ``int`` if ``ndigits`` is ``None``.
-        """
-        return self.__class__(round(self.x, ndigits), round(self.y, ndigits))
 
     def snap_to_grid(self, grid: 'Grid2', snap_fn: Callable[[float], int] | None = None) -> Self:
         """Returns a new instance whose X and Y values have been aligned to ``grid``.
