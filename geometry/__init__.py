@@ -45,6 +45,7 @@ class Coord2:
         self.round = self.__round__
         self.ceil = self.__ceil__
         self.floor = self.__floor__
+        self.trunc = self.__trunc__
 
     @property
     def x(self) -> float:  # testcheck: ignore
@@ -235,6 +236,10 @@ class Coord2:
     def __round__(self, ndigits: int | None = None) -> Self:
         """Rounds both values of this coordinate with per the built-in :func:`round` function."""
         return self.__class__(round(self.x, ndigits), round(self.y, ndigits))
+
+    def __trunc__(self) -> Self:
+        """Removes the fractional part of both values of this coordinate, leaving the integer part."""
+        return self.__class__(math.trunc(self.x), math.trunc(self.y))
 
     def __floor__(self) -> Self:
         """Rounds down both values of this coordinate."""

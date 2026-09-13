@@ -207,6 +207,12 @@ def test_coord2_mag_round() -> None:
     assert round(Coord2(1.54321, 2.54321), 2) == Coord2(1.54, 2.54)
     assert round(Coord2(1.64321, 2.64321), 2) == Coord2(1.64, 2.64)
 
+def test_coord2_mag_trunc() -> None:
+    c = Coord2(1, 2)
+    assert c.trunc == c.__trunc__
+
+    assert math.trunc(Coord2(-2.345, 2.345)) == Coord2(-2, 2)
+
 def test_coord2_mag_floor() -> None:
     c = Coord2(1, 2)
     assert c.floor == c.__floor__
