@@ -1,1 +1,0 @@
-`Grid2` now overrides the `Rect` methods `ceil`, `floor`, `map`, `resize`, `round`, `translate_by`, and `translate_to` to both fix `step` and `origin` not being retained, and to allow them to be set to new values

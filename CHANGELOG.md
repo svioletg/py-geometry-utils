@@ -13,6 +13,32 @@ release notes.
 
 <!-- towncrier release notes start -->
 
+## [0.8.0] - 2026-09-12
+
+### Added
+
+- Added classmethod `Grid2.from_points()`
+- Added classmethod `Rect.from_points()`
+- Added function `util.sign()`
+- Added method `Coord2.copy()`
+- Added method `Grid2.copy()`
+- Added method `Rect.copy()`
+- `Coord2.__copy__()` now accepts an optional keyword argument `mut`
+- `Grid2.__copy__()` now accepts an optional keyword argument `mut`
+- `Rect.__copy__()` now accepts an optional keyword argument `mut`
+
+### Changed
+
+- `Rect.map()` and `Grid2.map()` function parameter can now be a tuple, in
+  which the first is used for the top-left coordinates and the second is used
+  for the bottom-right
+
+### Fixed
+
+- `Grid2` now overrides the `Rect` methods `ceil`, `floor`, `map`, `resize`,
+  `round`, `translate_by`, and `translate_to` to both fix `step` and `origin`
+  not being retained, and to allow them to be set to new values
+
 ## [0.7.0] - 2026-08-14
 
 ### Added
