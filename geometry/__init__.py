@@ -43,6 +43,8 @@ class Coord2:
 
         # Magic method aliases
         self.round = self.__round__
+        self.ceil = self.__ceil__
+        self.floor = self.__floor__
 
     @property
     def x(self) -> float:  # testcheck: ignore
@@ -234,6 +236,14 @@ class Coord2:
         """Rounds both values of this coordinate with per the built-in :func:`round` function."""
         return self.__class__(round(self.x, ndigits), round(self.y, ndigits))
 
+    def __floor__(self) -> Self:
+        """Rounds down both values of this coordinate."""
+        return self.__class__(math.floor(self.x), math.floor(self.y))
+
+    def __ceil__(self) -> Self:
+        """Rounds up both values of this coordinate."""
+        return self.__class__(math.ceil(self.x), math.ceil(self.y))
+
     @overload
     def as_tuple(self, map_fn: None = None) -> tuple[float, float]: ...
     @overload
@@ -248,10 +258,6 @@ class Coord2:
             return (map_fn(self.x), map_fn(self.y))
 
         return (self.x, self.y)
-
-    def ceil(self) -> Self:
-        """Rounds up both values of this coordinate."""
-        return self.__class__(math.ceil(self.x), math.ceil(self.y))
 
     def copy(self, *, mut: bool | None = None) -> Self:
         """Returns a copy of this instance, optionally changing its mutability.
@@ -279,10 +285,6 @@ class Coord2:
     def format(self, s: str) -> str:
         """Returns ``s`` formatted with this coordinate's ``x`` and ``y`` values."""
         return s.format(x=self.x, y=self.y)
-
-    def floor(self) -> Self:
-        """Floors both values of this coordinate."""
-        return self.__class__(math.floor(self.x), math.floor(self.y))
 
     def intersects(self, a: CoordOrTuple2, b: CoordOrTuple2, *, rel_tol: float = 1e-09, abs_tol: float = 0.0) -> bool:
         """Returns whether this coordinate intersects the line drawn from ``a`` to ``b``.

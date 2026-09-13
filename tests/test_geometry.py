@@ -207,6 +207,22 @@ def test_coord2_mag_round() -> None:
     assert round(Coord2(1.54321, 2.54321), 2) == Coord2(1.54, 2.54)
     assert round(Coord2(1.64321, 2.64321), 2) == Coord2(1.64, 2.64)
 
+def test_coord2_mag_floor() -> None:
+    c = Coord2(1, 2)
+    assert c.floor == c.__floor__
+
+    assert math.floor(Coord2(1.4, 2.4)) == Coord2(1, 2)
+    assert math.floor(Coord2(1.5, 2.5)) == Coord2(1, 2)
+    assert math.floor(Coord2(1.6, 2.6)) == Coord2(1, 2)
+
+def test_coord2_mag_ceil() -> None:
+    c = Coord2(1, 2)
+    assert c.ceil == c.__ceil__
+
+    assert math.ceil(Coord2(1.4, 2.4)) == Coord2(2, 3)
+    assert math.ceil(Coord2(1.5, 2.5)) == Coord2(2, 3)
+    assert math.ceil(Coord2(1.6, 2.6)) == Coord2(2, 3)
+
 def test_coord2_mag_copy() -> None:
     inst = Coord2(1, 2)
     copied = copy(inst)
@@ -223,11 +239,6 @@ def test_coord2_as_tuple() -> None:
     assert Coord2(1.0, 2.0).as_tuple() == (1.0, 2.0)
     assert Coord2(1.0, 2.0).as_tuple(int) == (1, 2)
     assert Coord2(1.0, 2.0).as_tuple(str) == ('1.0', '2.0')
-
-def test_coord2_ceil() -> None:
-    assert Coord2(1.4, 2.4).ceil() == Coord2(2, 3)
-    assert Coord2(1.5, 2.5).ceil() == Coord2(2, 3)
-    assert Coord2(1.6, 2.6).ceil() == Coord2(2, 3)
 
 @pytest.mark.parametrize('mut', [True, False])
 def test_coord2_copy(mut: bool) -> None:
@@ -263,11 +274,6 @@ def test_coord2_distance(a: Tuple2[float], b: Tuple2[float], chebyshev: float, e
 def test_coord2_format() -> None:
     assert Coord2(1, 2).format('{x},{y}') == '1,2'
     assert Coord2(1.125, 2.5).format('{x:.2f},{y:.2f}') == '1.12,2.50'
-
-def test_coord2_floor() -> None:
-    assert Coord2(1.4, 2.4).floor() == Coord2(1, 2)
-    assert Coord2(1.5, 2.5).floor() == Coord2(1, 2)
-    assert Coord2(1.6, 2.6).floor() == Coord2(1, 2)
 
 @pytest.mark.parametrize(('a', 'b'),
     [
