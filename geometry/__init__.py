@@ -671,6 +671,34 @@ class Rect:
 
         return self.__class__(xy1_fn(self.x1), xy1_fn(self.y1), xy2_fn(self.x2), xy2_fn(self.y2))
 
+    @overload
+    def project(self, coords: CoordOrTuple2, target: RectOrTuple) -> Coord2: ...
+    @overload
+    def project(self, coords: RectOrTuple, target: RectOrTuple) -> Self: ...
+    def project(self, coords: CoordOrTuple2 | RectOrTuple, target: RectOrTuple) -> object:
+        """Returns a coordinate or rectangle projected from this onto another rectangle at the same relative position.
+
+        >>> r1 = Rect(-100, -100, 100, 100)
+        >>> r2 = Rect(0, 0, 100, 100)
+        >>> assert r1.project(Coord2(0, 0), r2) == Coord2(50, 50)
+        >>> assert r1.project(Rect(0, 0, 50, 50), r2) == Rect(50, 50, 75, 75)
+        """
+        if isinstance(coords, Rect) or (isinstance(coords, tuple) and len(coords) == 4):  # noqa: PLR2004
+            return self.__class__(
+                *self.project(Coord2(coords[0], coords[1]), target),
+                *self.project(Coord2(coords[2], coords[3]), target),
+            )
+
+        coords = coords if isinstance(coords, Coord2) else Coord2(*coords)
+        target = target if isinstance(target, Rect) else Rect(*target)
+
+        tl_a, br_a = self.top_left, self.bottom_right
+        tl_b, br_b = target.top_left, target.bottom_right
+
+        offset_factor: Coord2 = (coords - tl_a) / (br_a - tl_a)
+
+        return ((br_b - tl_b) * offset_factor) + tl_b
+
     def resize(self, xy: CoordOrTuple2, *, from_center: bool = False) -> Self:
         """Returns a new rectangle of this instance's size added to by ``xy``.
 
@@ -1109,22 +1137,6 @@ class Grid2(Rect):
         steps_y = self.steps_y(origin=origin.y, step=step.y) if step.y else (0,)
 
         yield from (Coord2(x, y) for x, y in product(steps_x, steps_y))
-
-    def project(self, coord: CoordOrTuple2, other_grid: 'Grid2') -> Coord2:
-        """Returns a :class:`Coord2` as if it were at the same relative position on another grid as this one.
-
-        >>> g1 = Grid2(-100, -100, 100, 100)
-        >>> g2 = Grid2(0, 0, 100, 100)
-        >>> assert g1.project(Coord2(0, 0), g2) == Coord2(50, 50)
-        """
-        coord = coord if isinstance(coord, Coord2) else Coord2(*coord)
-
-        tl_a, br_a = self.top_left, self.bottom_right
-        tl_b, br_b = other_grid.top_left, other_grid.bottom_right
-
-        offset_factor: Coord2 = (coord - tl_a) / (br_a - tl_a)
-
-        return ((br_b - tl_b) * offset_factor) + tl_b
 
     @override
     def zip_with(self,

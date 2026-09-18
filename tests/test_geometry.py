@@ -611,6 +611,22 @@ def test_rect_map() -> None:
     assert Rect(0.5, 0.5, 2.5, 2.5).map(math.floor) == Rect(0, 0, 2, 2)
     assert Rect(0.5, 0.5, 2.5, 2.5).map((math.floor, math.ceil)) == Rect(0, 0, 3, 3)
 
+def test_rect_project() -> None:
+    r1 = Rect(-100, -100, 100, 100)
+
+    assert r1.project(Coord2(0, 0), r1) == Coord2(0, 0)
+
+    assert r1.project(Coord2(0, 0), Rect(0, 0, 100, 100)) == Coord2(50, 50)
+    assert r1.project(Coord2(-50, -50), Rect(0, 0, 100, 100)) == Coord2(25, 25)
+    assert r1.project(Coord2(0, 50), Rect(0, 0, 100, 100)) == Coord2(50, 75)
+    assert r1.project(Coord2(0, 0), Rect(0, 0, 100, 200)) == Coord2(50, 100)
+
+    assert r1.project(Rect(-90, -90, -80, -80), Rect(0, 0, 100, 100)) == Rect(5, 5, 10, 10)
+    assert r1.project(Rect(0, 0, 50, 50), Rect(0, 0, 100, 100)) == Rect(50, 50, 75, 75)
+    assert r1.project(Rect(0, 0, 50, 50), Rect(0, 0, 100, 200)) == Rect(50, 100, 75, 150)
+
+    r1.project((1, 2), (1, 2, 3, 4))
+
 def test_rect_resize() -> None:
     assert Rect(0, 0, 2, 2).resize((2, 2)) == Rect(0, 0, 4, 4)
     assert Rect(0, 0, 2, 2).resize((2, 2), from_center=True) == Rect(-1, -1, 3, 3)
@@ -936,12 +952,6 @@ def test_grid2_steps() -> None:
     ]
 
     assert list(Grid2(0, 0, 2, 2, origin=(10, 10)).steps()) == []
-
-def test_grid2_project() -> None:
-    assert Grid2(-100, -100, 100, 100).project(Coord2(0, 0), Grid2(0, 0, 100, 100)) == Coord2(50, 50)
-    assert Grid2(-100, -100, 100, 100).project(Coord2(-50, -50), Grid2(0, 0, 100, 100)) == Coord2(25, 25)
-    assert Grid2(-100, -100, 100, 100).project(Coord2(0, 50), Grid2(0, 0, 100, 100)) == Coord2(50, 75)
-    assert Grid2(-100, -100, 100, 100).project(Coord2(0, 0), Grid2(0, 0, 100, 200)) == Coord2(50, 100)
 
 def test_grid2_zip_with() -> None:
     assert Grid2(0, 0, 2, 2).zip_with(max, Grid2(-2, -2, 4, 4)) == Grid2(0, 0, 4, 4)
